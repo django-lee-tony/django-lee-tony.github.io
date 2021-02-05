@@ -1,101 +1,92 @@
+
+<!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>create-project-of-vue2 | Gridea</title>
-<link rel="shortcut icon" href="https://django-lee-tony.github.io/favicon.ico?v=1612526121742">
-<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+    
+<meta charset="utf-8" >
+
+<title>create-project-of-vue2 | django </title>
+<meta name="description" content="温故而知新">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://django-lee-tony.github.io/favicon.ico?v=1612526312934">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link rel="stylesheet" href="https://django-lee-tony.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="create-project-of-vue2 | Gridea - Atom Feed" href="https://django-lee-tony.github.io/atom.xml">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
 
-    <meta name="description" content="安装
-卸载旧版本：
-如果你之前都是基于vue-cli2.X,你需要先卸载它：
-#卸载vue-cli 老版本的cli
-npm uninstall -g vue-cli
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
 
-安装
-npm install -g @vue/cli  // 安装cli..." />
-    <meta name="keywords" content="" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
-    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+
+
   </head>
   <body>
-    <div class="main">
-      <div class="main-content">
-        <div class="site-header">
-  <a href="https://django-lee-tony.github.io">
-  <img class="avatar" src="https://django-lee-tony.github.io/images/avatar.png?v=1612526121742" alt="">
-  </a>
-  <h1 class="site-title">
-    Gridea
-  </h1>
-  <p class="site-description">
-    温故而知新
-  </p>
-  <div class="menu-container">
-    
-      
-        <a href="https://django-lee-tony.github.io" class="menu">
-          首页
-        </a>
-      
-    
-      
-        <a href="https://django-lee-tony.github.io/post/websocket-feng-zhuang-zai-vuex-zhong" class="menu">
-          归档
-        </a>
-      
-    
-      
-        <a href="/tags" class="menu">
-          标签
-        </a>
-      
-    
-      
-        <a href="/post/about" class="menu">
-          关于
-        </a>
-      
-    
-  </div>
-  <div class="social-container">
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
+    <div id="app" class="main">
+      <div class="site-header-container">
+  <div class="site-header">
+    <div class="left">
+      <a href="https://django-lee-tony.github.io">
+        <img class="avatar" src="https://django-lee-tony.github.io/images/avatar.png?v=1612526312934" alt="" width="32px" height="32px">
+      </a>
+      <a href="https://django-lee-tony.github.io">
+        <h1 class="site-title">django </h1>
+      </a>
+    </div>
+    <div class="right">
+      <transition name="fade">
+        <i class="icon" :class="{ 'icon-close-outline': menuVisible, 'icon-menu-outline': !menuVisible }" @click="menuVisible = !menuVisible"></i>
+      </transition>
+    </div>
   </div>
 </div>
 
+<transition name="fade">
+  <div class="menu-container" style="display: none;" v-show="menuVisible">
+    <div class="menu-list">
+      
+        
+          <a href="https://django-lee-tony.github.io" class="menu purple-link">
+            首页
+          </a>
+        
+      
+        
+          <a href="https://django-lee-tony.github.io/post/websocket-feng-zhuang-zai-vuex-zhong" class="menu purple-link">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="menu purple-link">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="menu purple-link">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+</transition>
+
+
+      <div class="content-container">
         <div class="post-detail">
-          <article class="post">
-            <h2 class="post-title">
-              create-project-of-vue2
-            </h2>
-            <div class="post-info">
-              <span>
-                2021-02-05
-              </span>
-              <span>
-                2 min read
-              </span>
-              
-            </div>
+          
+          <h2 class="post-title">create-project-of-vue2</h2>
+          <div class="post-info post-detail-info">
+            <span><i class="icon-calendar-outline"></i> 2021-02-05</span>
             
-            <div class="post-content-wrapper">
-              <div class="post-content">
-                <h1 id="安装">安装</h1>
+          </div>
+          <div class="post-content">
+            <h1 id="安装">安装</h1>
 <h2 id="卸载旧版本">卸载旧版本：</h2>
 <h3 id="如果你之前都是基于vue-cli2x你需要先卸载它">如果你之前都是基于vue-cli2.X,你需要先卸载它：</h3>
 <pre><code>#卸载vue-cli 老版本的cli
@@ -133,96 +124,57 @@ E2E Testing E2E测试
 这样我们就可以通过链式操作来修改添加webpack配置。
 </code></pre>
 
-              </div>
-              <div class="toc-container">
-                <ul class="markdownIt-TOC">
-<li><a href="#%E5%AE%89%E8%A3%85">安装</a>
-<ul>
-<li><a href="#%E5%8D%B8%E8%BD%BD%E6%97%A7%E7%89%88%E6%9C%AC">卸载旧版本：</a>
-<ul>
-<li><a href="#%E5%A6%82%E6%9E%9C%E4%BD%A0%E4%B9%8B%E5%89%8D%E9%83%BD%E6%98%AF%E5%9F%BA%E4%BA%8Evue-cli2x%E4%BD%A0%E9%9C%80%E8%A6%81%E5%85%88%E5%8D%B8%E8%BD%BD%E5%AE%83">如果你之前都是基于vue-cli2.X,你需要先卸载它：</a></li>
-</ul>
-</li>
-<li><a href="#%E5%AE%89%E8%A3%85-2">安装</a></li>
-</ul>
-</li>
-<li><a href="#%E5%88%9B%E5%BB%BA%E9%A1%B9%E7%9B%AE">创建项目</a><br>
-*
-<ul>
-<li><a href="#%E6%AD%A4%E5%A4%84%E6%9C%89%E4%B8%A4%E4%B8%AA%E9%80%89%E6%8B%A9">此处有两个选择：</a></li>
-<li><a href="#%E9%80%89%E6%8B%A9%E6%89%8B%E5%8A%A8%E5%90%8E">选择手动后</a></li>
-<li><a href="#%E5%BD%93%E6%88%91%E4%BB%AC%E9%9C%80%E8%A6%81%E8%87%AA%E5%AE%9A%E4%B9%89webpack%E7%9B%B8%E5%85%B3%E9%85%8D%E7%BD%AE%E7%9A%84%E6%97%B6%E5%80%99%E9%9C%80%E8%A6%81%E5%9C%A8%E9%A1%B9%E7%9B%AE%E6%A0%B9%E7%9B%AE%E5%BD%95%E4%B8%AD%E5%88%9B%E5%BB%BAvueconfigjs%E6%96%87%E4%BB%B6%E5%AE%83%E4%BC%9A%E8%A2%ABvuecli-server%E8%87%AA%E5%8A%A8%E5%8A%A0%E8%BD%BD%E7%9B%B8%E5%85%B3%E9%85%8D%E7%BD%AE%E5%86%85%E5%AE%B9%E5%AE%98%E7%BD%91%E5%B0%86%E7%9A%84%E5%BE%88%E8%AF%A6%E7%BB%86">当我们需要自定义webpack相关配置的时候需要在项目根目录中创建vue.config.js文件，它会被@vue/cli-server自动加载，相关配置内容官网将的很详细</a></li>
-</ul>
-</li>
-</ul>
-
-              </div>
-            </div>
-          </article>
+          </div>
         </div>
 
         
           <div class="next-post">
-            <div class="next">下一篇</div>
-            <a href="https://django-lee-tony.github.io/post/svg-zheng-que-shi-yong-fang-shi/">
+            <a class="purple-link" href="https://django-lee-tony.github.io/post/svg-zheng-que-shi-yong-fang-shi/">
               <h3 class="post-title">
-                svg正确使用方式
+                下一篇：svg正确使用方式
               </h3>
             </a>
           </div>
-        
+          
+      </div>
 
-        
+      
 
-        <div class="site-footer">
-  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
-  <a class="rss" href="https://django-lee-tony.github.io/atom.xml" target="_blank">
-    <i class="ri-rss-line"></i> RSS
-  </a>
+      <div class="site-footer">
+  <div class="slogan">温故而知新</div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://django-lee-tony.github.io/atom.xml" target="_blank">RSS</a>
 </div>
 
-      </div>
+
     </div>
+    <script type="application/javascript">
 
-    <script>
-      hljs.initHighlightingOnLoad()
+hljs.initHighlightingOnLoad()
 
-      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
 
-      // This should probably be throttled.
-      // Especially because it triggers during smooth scrolling.
-      // https://lodash.com/docs/4.17.10#throttle
-      // You could do like...
-      // window.addEventListener("scroll", () => {
-      //    _.throttle(doThatStuff, 100);
-      // });
-      // Only not doing it here to keep this Pen dependency-free.
+</script>
 
-      window.addEventListener("scroll", event => {
-        let fromTop = window.scrollY;
 
-        mainNavLinks.forEach((link, index) => {
-          let section = document.getElementById(decodeURI(link.hash).substring(1));
-          let nextSection = null
-          if (mainNavLinks[index + 1]) {
-            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
-          }
-          if (section.offsetTop <= fromTop) {
-            if (nextSection) {
-              if (nextSection.offsetTop > fromTop) {
-                link.classList.add("current");
-              } else {
-                link.classList.remove("current");    
-              }
-            } else {
-              link.classList.add("current");
-            }
-          } else {
-            link.classList.remove("current");
-          }
-        });
-      });
 
-    </script>
+
   </body>
 </html>

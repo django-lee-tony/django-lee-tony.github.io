@@ -1,102 +1,102 @@
+
+<!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>react学习 生命周期 | Gridea</title>
-<link rel="shortcut icon" href="https://django-lee-tony.github.io/favicon.ico?v=1612526121742">
-<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+    
+<meta charset="utf-8" >
+
+<title>react学习 生命周期 | django </title>
+<meta name="description" content="温故而知新">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://django-lee-tony.github.io/favicon.ico?v=1612526312934">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link rel="stylesheet" href="https://django-lee-tony.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="react学习 生命周期 | Gridea - Atom Feed" href="https://django-lee-tony.github.io/atom.xml">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
 
-    <meta name="description" content="React
-组件生命周期
-每一个组件都有几个可以重写以让代码在处理环节的特定时期运行的“生命周期方法”。方法中带有前缀 will 的在特定环节之前被调用，而带有前缀 did 的方法则会在特定环节之后被调用
-【装配】
-这些方法会在组件实例被创..." />
-    <meta name="keywords" content="react" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
-    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+
+
+
   </head>
   <body>
-    <div class="main">
-      <div class="main-content">
-        <div class="site-header">
-  <a href="https://django-lee-tony.github.io">
-  <img class="avatar" src="https://django-lee-tony.github.io/images/avatar.png?v=1612526121742" alt="">
-  </a>
-  <h1 class="site-title">
-    Gridea
-  </h1>
-  <p class="site-description">
-    温故而知新
-  </p>
-  <div class="menu-container">
-    
-      
-        <a href="https://django-lee-tony.github.io" class="menu">
-          首页
-        </a>
-      
-    
-      
-        <a href="https://django-lee-tony.github.io/post/websocket-feng-zhuang-zai-vuex-zhong" class="menu">
-          归档
-        </a>
-      
-    
-      
-        <a href="/tags" class="menu">
-          标签
-        </a>
-      
-    
-      
-        <a href="/post/about" class="menu">
-          关于
-        </a>
-      
-    
-  </div>
-  <div class="social-container">
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
+    <div id="app" class="main">
+      <div class="site-header-container">
+  <div class="site-header">
+    <div class="left">
+      <a href="https://django-lee-tony.github.io">
+        <img class="avatar" src="https://django-lee-tony.github.io/images/avatar.png?v=1612526312934" alt="" width="32px" height="32px">
+      </a>
+      <a href="https://django-lee-tony.github.io">
+        <h1 class="site-title">django </h1>
+      </a>
+    </div>
+    <div class="right">
+      <transition name="fade">
+        <i class="icon" :class="{ 'icon-close-outline': menuVisible, 'icon-menu-outline': !menuVisible }" @click="menuVisible = !menuVisible"></i>
+      </transition>
+    </div>
   </div>
 </div>
 
+<transition name="fade">
+  <div class="menu-container" style="display: none;" v-show="menuVisible">
+    <div class="menu-list">
+      
+        
+          <a href="https://django-lee-tony.github.io" class="menu purple-link">
+            首页
+          </a>
+        
+      
+        
+          <a href="https://django-lee-tony.github.io/post/websocket-feng-zhuang-zai-vuex-zhong" class="menu purple-link">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="menu purple-link">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="menu purple-link">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+</transition>
+
+
+      <div class="content-container">
         <div class="post-detail">
-          <article class="post">
-            <h2 class="post-title">
-              react学习 生命周期
-            </h2>
-            <div class="post-info">
-              <span>
-                2021-02-05
-              </span>
-              <span>
-                5 min read
-              </span>
-              
-                <a href="https://django-lee-tony.github.io/tag/W8yc190Dr/" class="post-tag">
-                  # react
-                </a>
-              
-            </div>
+          
+          <h2 class="post-title">react学习 生命周期</h2>
+          <div class="post-info post-detail-info">
+            <span><i class="icon-calendar-outline"></i> 2021-02-05</span>
             
-            <div class="post-content-wrapper">
-              <div class="post-content">
-                <h1 id="react">React</h1>
+              <span>
+                <i class="icon-pricetags-outline"></i>
+                
+                  <a href="https://django-lee-tony.github.io/tag/W8yc190Dr/">
+                    react
+                    
+                  </a>
+                
+              </span>
+            
+          </div>
+          <div class="post-content">
+            <h1 id="react">React</h1>
 <h2 id="组件生命周期">组件生命周期</h2>
 <p>每一个组件都有几个可以重写以让代码在处理环节的特定时期运行的“生命周期方法”。方法中带有前缀 will 的在特定环节之前被调用，而带有前缀 did 的方法则会在特定环节之后被调用</p>
 <h3 id="装配">【装配】</h3>
@@ -164,111 +164,57 @@ render 函数应该是一个纯函数，完全根据this.state和this.props来�
 通常应该尝试避免所有forceUpdate() 的用法并仅在render()函数里从this.props和this.state读取数据
 </code></pre>
 
-              </div>
-              <div class="toc-container">
-                <ul class="markdownIt-TOC">
-<li><a href="#react">React</a>
-<ul>
-<li><a href="#%E7%BB%84%E4%BB%B6%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F">组件生命周期</a>
-<ul>
-<li><a href="#%E8%A3%85%E9%85%8D">【装配】</a></li>
-<li><a href="#%E6%9B%B4%E6%96%B0">【更新】</a></li>
-<li><a href="#%E5%8D%B8%E8%BD%BD">【卸载】</a></li>
-<li><a href="#%E9%94%99%E8%AF%AF%E5%A4%84%E7%90%86">【错误处理】</a></li>
-</ul>
-</li>
-<li><a href="#%E8%A3%85%E9%85%8D%E8%BF%87%E7%A8%8B">装配过程</a>
-<ul>
-<li><a href="#render">【render()】</a></li>
-<li><a href="#constructorprops">【constructor(props)】</a></li>
-<li><a href="#static-getderivedstatefrompropsnextprops-prevstate">【static getDerivedStateFromProps(nextProps, prevState)】</a></li>
-<li><a href="#componentdidmount">【componentDidMount()】</a></li>
-</ul>
-</li>
-<li><a href="#%E6%9B%B4%E6%96%B0%E5%8F%8A%E5%8D%B8%E8%BD%BD">更新及卸载</a>
-<ul>
-<li><a href="#shouldcomponentupdatenextprops-nextstate">【shouldComponentUpdate(nextProps, nextState)】</a></li>
-<li><a href="#getsnapshotbeforeupdate">【getSnapshotBeforeUpdate()】</a></li>
-<li><a href="#componentdidupateprevprops-prevstate">【componentDidUpate(prevProps, prevState)】</a></li>
-<li><a href="#componentwillunmount">【componentWillUnmount()】</a></li>
-</ul>
-</li>
-<li><a href="#%E5%BC%BA%E5%88%B6%E6%B8%B2%E6%9F%93">强制渲染</a>
-<ul>
-<li><a href="#componentforceupdatecallback">【component.forceUpdate(callback)】</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-
-              </div>
-            </div>
-          </article>
+          </div>
         </div>
 
         
           <div class="next-post">
-            <div class="next">下一篇</div>
-            <a href="https://django-lee-tony.github.io/post/create-project-of-vue2/">
+            <a class="purple-link" href="https://django-lee-tony.github.io/post/create-project-of-vue2/">
               <h3 class="post-title">
-                create-project-of-vue2
+                下一篇：create-project-of-vue2
               </h3>
             </a>
           </div>
-        
+          
+      </div>
 
-        
+      
 
-        <div class="site-footer">
-  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
-  <a class="rss" href="https://django-lee-tony.github.io/atom.xml" target="_blank">
-    <i class="ri-rss-line"></i> RSS
-  </a>
+      <div class="site-footer">
+  <div class="slogan">温故而知新</div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://django-lee-tony.github.io/atom.xml" target="_blank">RSS</a>
 </div>
 
-      </div>
+
     </div>
+    <script type="application/javascript">
 
-    <script>
-      hljs.initHighlightingOnLoad()
+hljs.initHighlightingOnLoad()
 
-      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
 
-      // This should probably be throttled.
-      // Especially because it triggers during smooth scrolling.
-      // https://lodash.com/docs/4.17.10#throttle
-      // You could do like...
-      // window.addEventListener("scroll", () => {
-      //    _.throttle(doThatStuff, 100);
-      // });
-      // Only not doing it here to keep this Pen dependency-free.
+</script>
 
-      window.addEventListener("scroll", event => {
-        let fromTop = window.scrollY;
 
-        mainNavLinks.forEach((link, index) => {
-          let section = document.getElementById(decodeURI(link.hash).substring(1));
-          let nextSection = null
-          if (mainNavLinks[index + 1]) {
-            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
-          }
-          if (section.offsetTop <= fromTop) {
-            if (nextSection) {
-              if (nextSection.offsetTop > fromTop) {
-                link.classList.add("current");
-              } else {
-                link.classList.remove("current");    
-              }
-            } else {
-              link.classList.add("current");
-            }
-          } else {
-            link.classList.remove("current");
-          }
-        });
-      });
 
-    </script>
+
   </body>
 </html>

@@ -1,98 +1,92 @@
+
+<!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>websocket封装在vuex中 | Gridea</title>
-<link rel="shortcut icon" href="https://django-lee-tony.github.io/favicon.ico?v=1612526121742">
-<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+    
+<meta charset="utf-8" >
+
+<title>websocket封装在vuex中 | django </title>
+<meta name="description" content="温故而知新">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://django-lee-tony.github.io/favicon.ico?v=1612526312934">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link rel="stylesheet" href="https://django-lee-tony.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="websocket封装在vuex中 | Gridea - Atom Feed" href="https://django-lee-tony.github.io/atom.xml">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
 
-    <meta name="description" content="websocket封装暴露方法给vuex调用
-在vuex创建一个socket模块 用于连接以及接收消息
-//socket.js
-let timer,timer1;
-import router from &quot;../../router&..." />
-    <meta name="keywords" content="" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
-    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+
+
+
   </head>
   <body>
-    <div class="main">
-      <div class="main-content">
-        <div class="site-header">
-  <a href="https://django-lee-tony.github.io">
-  <img class="avatar" src="https://django-lee-tony.github.io/images/avatar.png?v=1612526121742" alt="">
-  </a>
-  <h1 class="site-title">
-    Gridea
-  </h1>
-  <p class="site-description">
-    温故而知新
-  </p>
-  <div class="menu-container">
-    
-      
-        <a href="https://django-lee-tony.github.io" class="menu">
-          首页
-        </a>
-      
-    
-      
-        <a href="https://django-lee-tony.github.io/post/websocket-feng-zhuang-zai-vuex-zhong" class="menu">
-          归档
-        </a>
-      
-    
-      
-        <a href="/tags" class="menu">
-          标签
-        </a>
-      
-    
-      
-        <a href="/post/about" class="menu">
-          关于
-        </a>
-      
-    
-  </div>
-  <div class="social-container">
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
+    <div id="app" class="main">
+      <div class="site-header-container">
+  <div class="site-header">
+    <div class="left">
+      <a href="https://django-lee-tony.github.io">
+        <img class="avatar" src="https://django-lee-tony.github.io/images/avatar.png?v=1612526312934" alt="" width="32px" height="32px">
+      </a>
+      <a href="https://django-lee-tony.github.io">
+        <h1 class="site-title">django </h1>
+      </a>
+    </div>
+    <div class="right">
+      <transition name="fade">
+        <i class="icon" :class="{ 'icon-close-outline': menuVisible, 'icon-menu-outline': !menuVisible }" @click="menuVisible = !menuVisible"></i>
+      </transition>
+    </div>
   </div>
 </div>
 
+<transition name="fade">
+  <div class="menu-container" style="display: none;" v-show="menuVisible">
+    <div class="menu-list">
+      
+        
+          <a href="https://django-lee-tony.github.io" class="menu purple-link">
+            首页
+          </a>
+        
+      
+        
+          <a href="https://django-lee-tony.github.io/post/websocket-feng-zhuang-zai-vuex-zhong" class="menu purple-link">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="menu purple-link">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="menu purple-link">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+</transition>
+
+
+      <div class="content-container">
         <div class="post-detail">
-          <article class="post">
-            <h2 class="post-title">
-              websocket封装在vuex中
-            </h2>
-            <div class="post-info">
-              <span>
-                2021-02-05
-              </span>
-              <span>
-                6 min read
-              </span>
-              
-            </div>
+          
+          <h2 class="post-title">websocket封装在vuex中</h2>
+          <div class="post-info post-detail-info">
+            <span><i class="icon-calendar-outline"></i> 2021-02-05</span>
             
-            <div class="post-content-wrapper">
-              <div class="post-content">
-                <h1 id="websocket封装暴露方法给vuex调用">websocket封装暴露方法给vuex调用</h1>
+          </div>
+          <div class="post-content">
+            <h1 id="websocket封装暴露方法给vuex调用">websocket封装暴露方法给vuex调用</h1>
 <h2 id="在vuex创建一个socket模块-用于连接以及接收消息">在vuex创建一个socket模块 用于连接以及接收消息</h2>
 <pre><code class="language-$xslt">//socket.js
 let timer,timer1;
@@ -412,84 +406,57 @@ export default socket
 
 </code></pre>
 
-              </div>
-              <div class="toc-container">
-                <ul class="markdownIt-TOC">
-<li><a href="#websocket%E5%B0%81%E8%A3%85%E6%9A%B4%E9%9C%B2%E6%96%B9%E6%B3%95%E7%BB%99vuex%E8%B0%83%E7%94%A8">websocket封装暴露方法给vuex调用</a>
-<ul>
-<li><a href="#%E5%9C%A8vuex%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AAsocket%E6%A8%A1%E5%9D%97-%E7%94%A8%E4%BA%8E%E8%BF%9E%E6%8E%A5%E4%BB%A5%E5%8F%8A%E6%8E%A5%E6%94%B6%E6%B6%88%E6%81%AF">在vuex创建一个socket模块 用于连接以及接收消息</a></li>
-<li><a href="#%E5%B0%81%E8%A3%85websocket">封装websocket</a></li>
-</ul>
-</li>
-</ul>
-
-              </div>
-            </div>
-          </article>
+          </div>
         </div>
 
         
           <div class="next-post">
-            <div class="next">下一篇</div>
-            <a href="https://django-lee-tony.github.io/post/vux-duo-mo-kuai-ying-yong/">
+            <a class="purple-link" href="https://django-lee-tony.github.io/post/vux-duo-mo-kuai-ying-yong/">
               <h3 class="post-title">
-                vux多模块应用
+                下一篇：vux多模块应用
               </h3>
             </a>
           </div>
-        
+          
+      </div>
 
-        
+      
 
-        <div class="site-footer">
-  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
-  <a class="rss" href="https://django-lee-tony.github.io/atom.xml" target="_blank">
-    <i class="ri-rss-line"></i> RSS
-  </a>
+      <div class="site-footer">
+  <div class="slogan">温故而知新</div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://django-lee-tony.github.io/atom.xml" target="_blank">RSS</a>
 </div>
 
-      </div>
+
     </div>
+    <script type="application/javascript">
 
-    <script>
-      hljs.initHighlightingOnLoad()
+hljs.initHighlightingOnLoad()
 
-      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
 
-      // This should probably be throttled.
-      // Especially because it triggers during smooth scrolling.
-      // https://lodash.com/docs/4.17.10#throttle
-      // You could do like...
-      // window.addEventListener("scroll", () => {
-      //    _.throttle(doThatStuff, 100);
-      // });
-      // Only not doing it here to keep this Pen dependency-free.
+</script>
 
-      window.addEventListener("scroll", event => {
-        let fromTop = window.scrollY;
 
-        mainNavLinks.forEach((link, index) => {
-          let section = document.getElementById(decodeURI(link.hash).substring(1));
-          let nextSection = null
-          if (mainNavLinks[index + 1]) {
-            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
-          }
-          if (section.offsetTop <= fromTop) {
-            if (nextSection) {
-              if (nextSection.offsetTop > fromTop) {
-                link.classList.add("current");
-              } else {
-                link.classList.remove("current");    
-              }
-            } else {
-              link.classList.add("current");
-            }
-          } else {
-            link.classList.remove("current");
-          }
-        });
-      });
 
-    </script>
+
   </body>
 </html>
