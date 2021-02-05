@@ -975,6 +975,10 @@ td {
   font-weight: bold;
 }
 
+      .main {
+        max-width: 1280px;
+      }
+    
       .post-container .post .post-title {
         text-align: left;
       }
@@ -990,5 +994,17 @@ td {
     
       body {
         font-family: -apple-system,BlinkMacSystemFont,'Helvetica Neue','PingFang SC','Hiragino Sans GB','Droid Sans Fallback','Microsoft YaHei',sans-serif;
+      }
+    
+      .main {
+        background: #f1f1f1;
+      }
+    
+      body {
+        background: linear-gradient(to right bottom, #6d327c, #485DA6, #00a1ba, #01b18e, #32b37b);;
+      }
+    
+      body {
+        color: rgba(0,0,0,.98);
       }
     
