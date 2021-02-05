@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" >
 
-<title>create-project-of-vue2 | django </title>
+<title>vue webpack常规配置 | django </title>
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
@@ -18,14 +18,13 @@
 
 
 
-    <meta name="description" content="安装
-卸载旧版本：
-如果你之前都是基于vue-cli2.X,你需要先卸载它：
-#卸载vue-cli 老版本的cli
-npm uninstall -g vue-cli
+    <meta name="description" content="vue.config.js
+const path = require('path')
 
-安装
-npm install -g @vue/cli  // 安装cli..." />
+function resolve(dir) {
+    return path.join(__dirname, '.', dir)
+}
+module.e..." />
     <meta name="keywords" content="" />
   </head>
   <body>
@@ -97,46 +96,68 @@ npm install -g @vue/cli  // 安装cli..." />
       <div class="main-container">
         <div class="content-container" data-aos="fade-up">
           <div class="post-detail">
-            <h2 class="post-title">create-project-of-vue2</h2>
+            <h2 class="post-title">vue webpack常规配置</h2>
             <div class="post-date">2021-02-05</div>
             
             <div class="post-content" v-pre>
-              <h1 id="安装">安装</h1>
-<h2 id="卸载旧版本">卸载旧版本：</h2>
-<h3 id="如果你之前都是基于vue-cli2x你需要先卸载它">如果你之前都是基于vue-cli2.X,你需要先卸载它：</h3>
-<pre><code>#卸载vue-cli 老版本的cli
-npm uninstall -g vue-cli
-</code></pre>
-<h2 id="安装-2">安装</h2>
-<pre><code>npm install -g @vue/cli  // 安装cli3.x
-vue --version 或者 vue -V  //查看版本是否为3.x
-</code></pre>
-<h1 id="创建项目">创建项目</h1>
-<pre><code class="language-$xslt">vue create my-project // 其中my-project为项目目录名称
-</code></pre>
-<h3 id="此处有两个选择">此处有两个选择：</h3>
-<pre><code class="language-$xslt">default (babel, eslint) 默认配置 提供babel和eslint支持
-Manually select features 自己手动去选择需要的配置
-</code></pre>
-<h3 id="选择手动后">选择手动后</h3>
-<pre><code class="language-$xslt">对于每一项的功能，做一下简单阐述：
-Babel 主要是对es6语法转换成兼容的js （选上）
-TypeScript 支持使用TypeScript语法来编写代码
-PWA PWA 支持
-Router 支持vue路由配置插件（一般都会选择）
-Vuex 支持vue程序状态管理模式 (一般都会选择)
-CSS Pre-processors 支持css预处理器 （一般都会选择）
-Linter / Formatter 支持代码风格检查和格式化 （选上）
-Unit Testing 单元测试
-E2E Testing E2E测试
-</code></pre>
-<h3 id="当我们需要自定义webpack相关配置的时候需要在项目根目录中创建vueconfigjs文件它会被vuecli-server自动加载相关配置内容官网将的很详细">当我们需要自定义webpack相关配置的时候需要在项目根目录中创建vue.config.js文件，它会被@vue/cli-server自动加载，相关配置内容官网将的很详细</h3>
-<pre><code class="language-$xslt">当我们需要调整webpac k配置的时候，
-可以通过chainWebpack属性进行链式操作，
-这里有个技巧就是通过 vue inspect --mode production product.js 
-或vue inspect &gt; development.js 
-来导处生产和开发环境的配置文件，文件里面包含了链式访问的规则，
-这样我们就可以通过链式操作来修改添加webpack配置。
+              <h3 id="vueconfigjs">vue.config.js</h3>
+<pre><code>const path = require('path')
+
+function resolve(dir) {
+    return path.join(__dirname, '.', dir)
+}
+module.exports={
+    lintOnSave:false,
+    productionSourceMap: process.env.NODE_ENV === 'development',
+    devServer: {
+        overlay: {
+            warning: false,
+            errors: false
+        },
+        open: true,
+        proxy:{
+            &quot;/api&quot;:{
+                target: &quot;http://sp8001.sp.com:8888/&quot;,
+            }
+        }
+    },
+    css:{
+        sourceMap:  process.env.NODE_ENV === 'development',// 开启 CSS source maps
+        loaderOptions: {
+            sass: {
+                prependData: &quot;@import '~@/assets/style/public.scss';&quot;
+            },
+        }
+    },
+},
+//合并配置
+chainWebpack(config){
+    config.plugins
+            .delete('prefetch')
+            .delete('preload')
+        // 解决 cli3 热更新失效 https://github.com/vuejs/vue-cli/issues/1559
+        config.resolve
+            .symlinks(true)
+    config.entry('main').add('babel-polyfill')
+    // 开启图片压缩
+        config.module.rule('images')
+            .test(/\.(png|jpe?g|gif)(\?.*)?$/)
+            .use('image-webpack-loader')
+            .loader('image-webpack-loader')
+            .options({ bypassOnDebug: true })
+        if (process.env.NODE_ENV === 'production') {
+            return {
+                plugins: [
+                    new CompressionPlugin({
+                        test: /\.js$|\.ttf$|\.html$|\.css$|\.jpg$|\.jpeg$|\.png/, // 需要压缩的文件类型
+                        threshold: 1024, // 归档需要进行压缩的文件大小最小值，我这个是10K以上的进行压缩
+                        deleteOriginalAssets: false, // 是否删除原文件
+                        minRatio: 0.8
+                    })
+                ]
+            }
+        }
+}
 </code></pre>
 
             </div>
@@ -144,9 +165,9 @@ E2E Testing E2E测试
             
               <div class="next-post">
                 <div class="next">下一篇</div>
-                <a href="https://django-lee-tony.github.io/post/svg-zheng-que-shi-yong-fang-shi/">
+                <a href="https://django-lee-tony.github.io/post/react-xue-xi-sheng-ming-zhou-qi/">
                   <h3 class="post-title">
-                    svg正确使用方式
+                    react学习 生命周期
                   </h3>
                 </a>
               </div>
