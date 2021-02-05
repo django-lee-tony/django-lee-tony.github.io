@@ -1,92 +1,108 @@
-
 <!DOCTYPE html>
 <html>
   <head>
-    
-<meta charset="utf-8" >
+    <meta charset="utf-8" >
 
 <title>移动端常见问题处理 | django </title>
-<meta name="description" content="温故而知新">
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
 
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-<link rel="shortcut icon" href="https://django-lee-tony.github.io/favicon.ico?v=1612526312934">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="shortcut icon" href="https://django-lee-tony.github.io/favicon.ico?v=1612526358114">
 <link rel="stylesheet" href="https://django-lee-tony.github.io/styles/main.css">
 
 
 
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
 
 
 
+    <meta name="description" content="
+title: 移动端常见问题处理
+date: 2021-02-04 16:21:01
+tags:
+本文将详细介绍移动web开发中的常见问题
+移动端常见问题处理
+input
+【光标颜色】
+默认情况下，光标颜色与字体颜色color相同，但也可..." />
+    <meta name="keywords" content="" />
   </head>
   <body>
     <div id="app" class="main">
-      <div class="site-header-container">
-  <div class="site-header">
-    <div class="left">
-      <a href="https://django-lee-tony.github.io">
-        <img class="avatar" src="https://django-lee-tony.github.io/images/avatar.png?v=1612526312934" alt="" width="32px" height="32px">
-      </a>
-      <a href="https://django-lee-tony.github.io">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://django-lee-tony.github.io">
+        <img src="https://django-lee-tony.github.io/images/avatar.png?v=1612526358114" class="site-logo">
         <h1 class="site-title">django </h1>
       </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
     </div>
-    <div class="right">
-      <transition name="fade">
-        <i class="icon" :class="{ 'icon-close-outline': menuVisible, 'icon-menu-outline': !menuVisible }" @click="menuVisible = !menuVisible"></i>
-      </transition>
-    </div>
-  </div>
-</div>
-
-<transition name="fade">
-  <div class="menu-container" style="display: none;" v-show="menuVisible">
-    <div class="menu-list">
+    <div>
       
         
-          <a href="https://django-lee-tony.github.io" class="menu purple-link">
+          <a href="https://django-lee-tony.github.io" class="site-nav">
             首页
           </a>
         
       
         
-          <a href="https://django-lee-tony.github.io/post/websocket-feng-zhuang-zai-vuex-zhong" class="menu purple-link">
+          <a href="https://django-lee-tony.github.io/post/websocket-feng-zhuang-zai-vuex-zhong" class="site-nav">
             归档
           </a>
         
       
         
-          <a href="/tags" class="menu purple-link">
+          <a href="/tags" class="site-nav">
             标签
           </a>
         
       
         
-          <a href="/post/about" class="menu purple-link">
+          <a href="/post/about" class="site-nav">
             关于
           </a>
         
       
     </div>
   </div>
-</transition>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      温故而知新
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://django-lee-tony.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
 
 
-      <div class="content-container">
-        <div class="post-detail">
-          
-          <h2 class="post-title">移动端常见问题处理</h2>
-          <div class="post-info post-detail-info">
-            <span><i class="icon-calendar-outline"></i> 2021-02-05</span>
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">移动端常见问题处理</h2>
+            <div class="post-date">2021-02-05</div>
             
-          </div>
-          <div class="post-content">
-            <hr>
+            <div class="post-content" v-pre>
+              <hr>
 <h2 id="title-移动端常见问题处理date-2021-02-04-162101tags">title: 移动端常见问题处理<br>
 date: 2021-02-04 16:21:01<br>
 tags:</h2>
@@ -293,37 +309,22 @@ var startX,startY;
 &lt;meta name=&quot;browsermode&quot; content=&quot;application&quot;&gt;
 </code></pre>
 
+            </div>
+            
+            
+
+            
+
           </div>
+
         </div>
-
-        
       </div>
-
-      
-
-      <div class="site-footer">
-  <div class="slogan">温故而知新</div>
-  <div class="social-container">
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-  </div>
-  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://django-lee-tony.github.io/atom.xml" target="_blank">RSS</a>
-</div>
-
-
     </div>
-    <script type="application/javascript">
 
-hljs.initHighlightingOnLoad()
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
 
 var app = new Vue({
   el: '#app',
@@ -333,6 +334,8 @@ var app = new Vue({
 })
 
 </script>
+
+
 
 
 
