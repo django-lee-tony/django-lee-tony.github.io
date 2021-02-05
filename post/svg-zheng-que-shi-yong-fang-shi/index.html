@@ -1,0 +1,274 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>svg正确使用方式 | Gridea</title>
+<link rel="shortcut icon" href="https://django-lee-tony.github.io/favicon.ico?v=1612518451265">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://django-lee-tony.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="svg正确使用方式 | Gridea - Atom Feed" href="https://django-lee-tony.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="svg正确使用方式
+svg-sprite-loader 下载
+npm i svg-sprite-loader 或者 yarn add svg-sprite-loader
+
+新建vue.config.js 创建src/assets/svg 文..." />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://django-lee-tony.github.io">
+  <img class="avatar" src="https://django-lee-tony.github.io/images/avatar.png?v=1612518451265" alt="">
+  </a>
+  <h1 class="site-title">
+    Gridea
+  </h1>
+  <p class="site-description">
+    温故而知新
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              svg正确使用方式
+            </h2>
+            <div class="post-info">
+              <span>
+                2021-02-05
+              </span>
+              <span>
+                2 min read
+              </span>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <h1 id="svg正确使用方式">svg正确使用方式</h1>
+<h2 id="svg-sprite-loader-下载">svg-sprite-loader 下载</h2>
+<pre><code class="language-$xslt">npm i svg-sprite-loader 或者 yarn add svg-sprite-loader
+</code></pre>
+<h2 id="新建vueconfigjs-创建srcassetssvg-文件夹-将svg放入该文件夹中">新建vue.config.js 创建src/assets/svg 文件夹  将svg放入该文件夹中</h2>
+<pre><code class="language-$xslt">const path = require(&quot;path&quot;);
+function resolve(dir) {
+    return path.join(__dirname, &quot;.&quot;, dir);
+}
+module.exports={
+    ...
+    chainwebpack:config =&gt;{
+        ...
+    config.module.rules.delete(&quot;svg&quot;); //重点:删除默认配置中处理svg,
+            //const svgRule = config.module.rule('svg')
+            //svgRule.uses.clear()
+            config.module
+                .rule(&quot;svg-sprite-loader&quot;)
+                .test(/\.svg$/)
+                .include.add(resolve(&quot;src/assets/svg&quot;)) //处理svg目录
+                .end()
+                .use(&quot;svg-sprite-loader&quot;)
+                .loader(&quot;svg-sprite-loader&quot;)
+                .options({
+                    symbolId: &quot;icon-[name]&quot;
+                });
+    }
+}
+</code></pre>
+<h2 id="封装组件">封装组件</h2>
+<h3 id="新建indexvue">新建index.vue</h3>
+<pre><code class="language-$xslt">//index.vue
+&lt;template&gt;
+    &lt;svg :class=&quot;svgClass&quot; aria-hidden=&quot;true&quot;&gt;
+        &lt;use :xlink:href=&quot;iconName&quot;/&gt;
+    &lt;/svg&gt;
+&lt;/template&gt;
+&lt;script&gt;
+    export default {
+        name: 'SvgIcon',
+        props: {
+            iconClass: { //接收svg名称 注意就是svg文件名
+                type: String,
+                required: true
+            },
+            className: { //svg图标的属性 如通过font-sizee属性控制icon大小
+                type: String,
+                default: ''
+            }
+        },
+        computed: {
+            iconName() {
+                return `#icon-${this.iconClass}`
+            },
+            svgClass() {
+                if (this.className) {
+                    return 'svg-icon ' + this.className
+                } else {
+                    return 'svg-icon'
+                }
+            }
+        }
+    }
+&lt;/script&gt;
+&lt;style scoped&gt;
+    .svg-icon {
+        width: 1em;
+        height: 1em;
+        vertical-align: -0.15em;
+        fill: currentColor;
+        overflow: hidden;
+    }
+&lt;/style&gt;
+
+</code></pre>
+<h3 id="indexjs文件">index.js文件</h3>
+<pre><code class="language-$xslt">//使用webpack提供的 require.context方法 引入所有的svg
+import svgIcon from &quot;./index.vue&quot;
+const requireAll = requireContext =&gt; requireContext.keys().map(requireContext)
+const req = require.context('../../assets/svg', false, /\.svg$/)
+requireAll(req)
+// 暴露方法
+export default {
+    install(Vue){
+        Vue.component('svgIcon',svgIcon);
+    }
+}
+</code></pre>
+<h2 id="使用方式">使用方式</h2>
+<pre><code class="language-$xslt"> &lt;svg-icon  icon-class=&quot;svgname&quot; class-name=&quot;svgclass&quot;&gt;&lt;/svg-icon&gt;
+</code></pre>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#svg%E6%AD%A3%E7%A1%AE%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F">svg正确使用方式</a>
+<ul>
+<li><a href="#svg-sprite-loader-%E4%B8%8B%E8%BD%BD">svg-sprite-loader 下载</a></li>
+<li><a href="#%E6%96%B0%E5%BB%BAvueconfigjs-%E5%88%9B%E5%BB%BAsrcassetssvg-%E6%96%87%E4%BB%B6%E5%A4%B9-%E5%B0%86svg%E6%94%BE%E5%85%A5%E8%AF%A5%E6%96%87%E4%BB%B6%E5%A4%B9%E4%B8%AD">新建vue.config.js 创建src/assets/svg 文件夹  将svg放入该文件夹中</a></li>
+<li><a href="#%E5%B0%81%E8%A3%85%E7%BB%84%E4%BB%B6">封装组件</a>
+<ul>
+<li><a href="#%E6%96%B0%E5%BB%BAindexvue">新建index.vue</a></li>
+<li><a href="#indexjs%E6%96%87%E4%BB%B6">index.js文件</a></li>
+</ul>
+</li>
+<li><a href="#%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F">使用方式</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://django-lee-tony.github.io/post/vue-feng-zhuang-message-zu-jian/">
+              <h3 class="post-title">
+                vue封装message组件
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://django-lee-tony.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>
