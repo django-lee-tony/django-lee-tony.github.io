@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>react学习之 react-redux | django </title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://django-lee-tony.github.io/favicon.ico?v=1612600270607">
+<link rel="stylesheet" href="https://django-lee-tony.github.io/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="核心概念
+redux专注于状态管理，把所有的状态都存在一个对象中。核心概念包括：store、state、action、reducer
+【store】
+store是保存数据的地方，redux提供createStore函数来生成 Store。函..." />
+    <meta name="keywords" content="react" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://django-lee-tony.github.io">
+        <img src="https://django-lee-tony.github.io/images/avatar.png?v=1612600270607" class="site-logo">
+        <h1 class="site-title">django </h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="https://django-lee-tony.github.io" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="https://django-lee-tony.github.io/post/websocket-feng-zhuang-zai-vuex-zhong" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      温故而知新
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://django-lee-tony.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">react学习之 react-redux</h2>
+            <div class="post-date">2021-02-06</div>
+            
+            <div class="post-content" v-pre>
+              <h1 id="核心概念">核心概念</h1>
+<p>redux专注于状态管理，把所有的状态都存在一个对象中。核心概念包括：store、state、action、reducer</p>
+<h3 id="store">【store】</h3>
+<p>store是保存数据的地方，redux提供createStore函数来生成 Store。函数参数是后面要介绍的reducer</p>
+<pre><code>import { createStore } from 'redux'
+const store = createStore(reducer)
+</code></pre>
+<h3 id="state">【state】</h3>
+<p>state是store的某个时刻的快照，可以通过store.getState()取得当前时刻的state</p>
+<pre><code>const state = store.getState()
+</code></pre>
+<h3 id="action">【action】</h3>
+<p>action用来改变state。action是一个对象，其中的type属性是必须的，其他的属性一般用来设置改变state需要的数据</p>
+<pre><code>const action = {
+  type: 'ADD_ONE',
+  num: 1
+}
+</code></pre>
+<p>store.dispatch()是发出action的唯一方法</p>
+<pre><code>const action = {
+  type: 'ADD_ONE',
+  num: 1
+}
+store.dispatch(action)
+</code></pre>
+<h3 id="reducer">【reducer】</h3>
+<p>reducer 是一个函数，它接受action和当前state作为参数，返回一个新的state</p>
+<pre><code>import { createStore } from 'redux'
+const store = createStore(reducer)
+
+const reducer = (state = 10, action) =&gt; {
+  switch (action.type) {
+    case 'ADD_ONE':
+      return state + action.num;
+    default: 
+      return state;
+  }
+};
+当store.dispatch发送过来一个新的action，store就会自动调用reducer，得到新的state
+</code></pre>
+<h2 id="简单实例">简单实例</h2>
+<pre><code>//第一步，创建action
+const addOne = {
+  type: 'ADD',
+  num: 1
+}
+const addTwo = {
+  type: 'ADD',
+  num: 2
+}
+const square = {
+  type: 'SQUARE'
+}
+//第二步，创建reducer
+let math = (state = 10, action) =&gt; {
+  switch (action.type) {
+    case ADD:
+      return state + action.num
+    case SQUARE:
+      return state * state
+    default:
+      return state
+  }
+}
+//第三步，创建store
+import { createStore } from 'redux'
+const store = createStore(math)
+//第四步，测试，通过dispatch发出action，并通过getState()取得当前state值
+console.log(store.getState()) //默认值为10
+store.dispatch(addOne) //发起'+1'的action
+console.log(store.getState()) //当前值为10+1=11
+store.dispatch(square) //发起'乘方'的action
+console.log(store.getState()) //当前值为11*11=121
+store.dispatch(addTwo) //发起'+2'的action
+console.log(store.getState()) //当前值为121+2=123
+</code></pre>
+<h2 id="目录结构">目录结构</h2>
+<h3 id="下面对目录结构进行划分">下面对目录结构进行划分</h3>
+<p>1、一般地，将action.type设置为常量，这样在书写错误时，会得到报错提示</p>
+<pre><code>// constants/ActionTypes.js
+export const ADD = 'ADD'
+export const SQUARE = 'SQUARE'
+</code></pre>
+<p>2、可以将addOne对象和addTwo对象整合成add函数的形式</p>
+<pre><code>// action/math.js
+import { ADD, SQUARE } from '../constants/ActionTypes'
+export const add = num =&gt; ({ type: ADD, num })
+export const square = { type: SQUARE }
+</code></pre>
+<p>3、根据action.type的分类来拆分reducer，最终通过combineReducers方法将拆分的reducer合并起来。上例中的action类型都是数字运算，无需拆分，只需进行如下变化</p>
+<pre><code>// reducer/math.js
+import { ADD, SQUARE } from '../constants/ActionTypes'
+const math = (state = 10, action) =&gt; {
+  switch (action.type) {
+    case ADD:
+      return state + action.num
+    case SQUARE:
+      return state * state
+    default:
+      return state
+  }
+}
+export default math
+</code></pre>
+<pre><code>// reducer/index.js
+import { combineReducers } from 'redux'
+import math from './math'
+const rootReducer = combineReducers({
+  math
+})
+export default rootReducer
+</code></pre>
+<p>4、将store存储到store/index.js文件中</p>
+<pre><code>// store/index.js
+import { createStore } from 'redux'
+import rootReducer from '../reducer'
+export default createStore(rootReducer)
+</code></pre>
+<p>5、最终，根路径下的index.js内容如下所示</p>
+<pre><code>import store from './store'
+import {add, square} from './action/math'
+
+console.log(store.getState()) //默认值为10
+
+store.dispatch(add(1)) //发起'+1'的action
+console.log(store.getState()) //当前值为10+1=11
+
+store.dispatch(square) //发起'乘方'的action
+console.log(store.getState()) //当前值为11*11=121
+
+store.dispatch(add(2)) //发起'+2'的action
+console.log(store.getState()) //当前值为121+2=123
+</code></pre>
+<h2 id="ui层">UI层</h2>
+<p>前面的示例中，只是redux的状态改变，下面利用UI层来建立view和state的联系，将根目录下的index.js的内容更改如下<br>
+import store from './store'<br>
+import React from 'react'<br>
+import ReactDOM from 'react-dom'<br>
+import { add, square } from './action/math'</p>
+<p>ReactDOM.render(</p>
+  <div store={store}>
+    <p>{store.getState().math}</p>
+    <input type="button" onClick={() => store.dispatch(add(1))} value="+1" />
+    <input type="button" onClick={() => store.dispatch(add(2))} value="+2" />
+    <input type="button" onClick={() => store.dispatch(square)} value="乘方" />
+  </div>,
+  document.getElementById('root')
+)
+### 【store.subscribe()】
+接下来介绍store.subscribe()方法了，该方法用来设置监听函数，一旦state发生变化，就自动执行这个函数。该方法的返回值是一个函数，调用这个函数可以解除监听
+下面将示例代码更改如下
+```
+import store from './store'
+import React from 'react'
+import ReactDOM from 'react-dom'
+import { add, square } from './action/math'
+<p>const render = () =&gt; ReactDOM.render(</p>
+  <div store={store}>
+    <p>{store.getState().math}</p>
+    <input type="button" onClick={() => store.dispatch(add(1))} value="+1" />
+    <input type="button" onClick={() => store.dispatch(add(2))} value="+2" />
+    <input type="button" onClick={() => store.dispatch(square)} value="乘方" />
+  </div>,
+  document.getElementById('root')
+)
+<p>render()<br>
+store.subscribe(render)</p>
+<pre><code>## 异步
+redux默认只处理同步，对于API请求这样的异步任务则无能为力
+接下来尝试使用axios的get方法来请求下面这个API
+</code></pre>
+<p>复制代码<br>
+// constants/ActionTypes.js<br>
+export const ADD = 'ADD'<br>
+export const SQUARE = 'SQUARE'<br>
+export const SET = 'SET'</p>
+<p>// action/math.js<br>
+import { ADD, SQUARE, SET } from '../constants/ActionTypes'<br>
+export const add = num =&gt; ({ type: ADD, num })<br>
+export const square = { type: SQUARE }<br>
+export const setNum = num =&gt; ({type: SET,num})</p>
+<p>// reduce/math.js<br>
+import { ADD, SQUARE,SET } from '../constants/ActionTypes'<br>
+const math = (state = 10, action) =&gt; {<br>
+switch (action.type) {<br>
+case ADD:<br>
+return state + action.num<br>
+case SQUARE:<br>
+return state * state<br>
+case SET:<br>
+return action.num<br>
+default:<br>
+return state<br>
+}<br>
+}<br>
+export default math</p>
+<p>// index.js<br>
+import store from './store'<br>
+import React from 'react'<br>
+import ReactDOM from 'react-dom'<br>
+import { add, square, setNum } from './action/math'<br>
+import axios from 'axios'<br>
+let uri = 'https://jsonplaceholder.typicode.com/posts/2'<br>
+const render = () =&gt; ReactDOM.render(</p>
+  <div store={store}>
+    <p>{store.getState().math}</p>
+    <input type="button" onClick={() => {axios.get(uri).then(res => {store.dispatch(store.dispatch(setNum(res.data.id)))})}} value="设置Num" />
+    <input type="button" onClick={() => store.dispatch(add(1))} value="+1" />
+    <input type="button" onClick={() => store.dispatch(add(2))} value="+2" />
+    <input type="button" onClick={() => store.dispatch(square)} value="乘方" />
+  </div>,
+  document.getElementById('root')
+)
+render()
+store.subscribe(render)
+```
+但是，虽然API是异步操作，但store.dispatch并不是异步，而axios通过get方法请求回来数据后，store.dispatch在axios中的then方法中同步取得数据
+### 【redux-thunk】
+如果要使用真正的异步操作，即把axios方法封装到store.dispatch中，需要使用redux-thunk中间件
+````
+//下载
+npm install --save redux-thunk
+```
+然后，使用applyMiddleware来使用thunk中间件
+```
+ import { createStore, applyMiddleware } from 'redux'
+import thunk from 'redux-thunk'
+import rootReducer from '../reducer'
+export default createStore(rootReducer,applyMiddleware(thunk))
+```
+　接着来定义setNum这个action creator，然后在index.js文件的DOM加载完成后就发出setNum
+* [注意]如果action是一个对象，则它就是一个action，如果action是一个函数，则它是一个action creator，即action制造器
+<p>修改的代码如下</p>
+<pre><code>// action/math.js
+import { ADD, SQUARE, SET } from '../constants/ActionTypes'
+import axios from 'axios'
+const uri = 'https://jsonplaceholder.typicode.com/posts/2'
+export const add = num =&gt; ({ type: ADD, num })
+export const square = { type: SQUARE }
+export const setNum = () =&gt; (dispatch, getState) =&gt; {
+  return axios.get(uri).then(res =&gt; {
+    dispatch({
+      type: SET,
+      num: res.data.id
+    })
+  })
+}
+
+// index.js
+import store from './store'
+import React from 'react'
+import ReactDOM from 'react-dom'
+import { add, square, setNum } from './action/math'
+const render = () =&gt; ReactDOM.render(
+  &lt;div store={store}&gt;
+    &lt;p&gt;{store.getState().math}&lt;/p&gt;
+    &lt;input type=&quot;button&quot; onClick={() =&gt; store.dispatch(setNum())} value=&quot;设置Num&quot; /&gt;
+    &lt;input type=&quot;button&quot; onClick={() =&gt; store.dispatch(add(1))} value=&quot;+1&quot; /&gt;
+    &lt;input type=&quot;button&quot; onClick={() =&gt; store.dispatch(add(2))} value=&quot;+2&quot; /&gt;
+    &lt;input type=&quot;button&quot; onClick={() =&gt; store.dispatch(square)} value=&quot;乘方&quot; /&gt;
+  &lt;/div&gt;,
+  document.getElementById('root')
+)
+render()
+store.subscribe(render)
+
+</code></pre>
+<h3 id="提示信息">【提示信息】</h3>
+<p>如果做的更完备一点，应该把异步请求时的提示信息也加上。增加一个fetch的action，用于控制fetch过程的提示信息及显示隐藏情况<br>
+代码更改如下</p>
+<pre><code>import { SET_FETCH_MESSAGE, HIDE_FETCH_MESSAGE } from '../constants/ActionTypes'
+export const startFetch = { type: SET_FETCH_MESSAGE,message: '开始发送异步请求' }
+export const successFetch = { type: SET_FETCH_MESSAGE, message: '成功接收数据' }
+export const failFetch = { type: SET_FETCH_MESSAGE, message: '接收数据失败' }
+export const hideFetchMessage = { type: HIDE_FETCH_MESSAGE }
+</code></pre>
+<pre><code>// action/math.js
+import { ADD, SQUARE, SET } from '../constants/ActionTypes'
+import { startFetch, successFetch, failFetch, hideFetchMessage } from './fetch'
+import axios from 'axios'
+const uri = 'https://jsonplaceholder.typicode.com/posts/2'
+export const add = num =&gt; ({ type: ADD, num })
+export const square = { type: SQUARE }
+export const setNum = () =&gt; (dispatch, getState) =&gt; {
+  dispatch(startFetch)
+  setTimeout(() =&gt; {
+    dispatch(hideFetchMessage)
+  }, 500)
+  return axios
+    .get(uri)
+    .then(res =&gt; {
+      setTimeout(() =&gt; {
+        dispatch(successFetch)
+        setTimeout(() =&gt; {
+          dispatch(hideFetchMessage)
+        }, 500)
+        dispatch({ type: SET, num: res.data.id })
+      }, 1000)
+    })
+    .catch(err =&gt; {
+      dispatch(failFetch)
+      setTimeout(() =&gt; {
+        dispatch(hideFetchMessage)
+      }, 500)
+    })
+}
+
+</code></pre>
+<pre><code>// constants/ActionTypes.js
+export const ADD = 'ADD'
+export const SQUARE = 'SQUARE'
+export const SET = 'SET'
+export const SET_FETCH_MESSAGE = 'SET_FETCH_MESSAGE'
+export const HIDE_FETCH_MESSAGE = 'HIDE_FETCH_MESSAGE'
+</code></pre>
+<pre><code>// reduce/fetch.js
+import { SET_FETCH_MESSAGE,HIDE_FETCH_MESSAGE } from '../constants/ActionTypes'
+const initState = {
+  message:'',
+  isShow:false
+}
+const fetch = (state = initState, action) =&gt; {
+  switch (action.type) {
+    case SET_FETCH_MESSAGE:
+      return {isShow: true, message: action.message}
+    case HIDE_FETCH_MESSAGE:
+      return { isShow: false, message: '' }
+    default:
+      return state
+  }
+}
+export default fetch
+</code></pre>
+<pre><code>// index.js
+import store from './store'
+import React from 'react'
+import ReactDOM from 'react-dom'
+import { add, square, setNum } from './action/math'
+const render = () =&gt; ReactDOM.render(
+  &lt;div store={store}&gt;
+    &lt;p&gt;{store.getState().math}&lt;/p&gt;
+    &lt;input type=&quot;button&quot; onClick={() =&gt; store.dispatch(setNum())} value=&quot;设置Num&quot; /&gt;
+    &lt;input type=&quot;button&quot; onClick={() =&gt; store.dispatch(add(1))} value=&quot;+1&quot; /&gt;
+    &lt;input type=&quot;button&quot; onClick={() =&gt; store.dispatch(add(2))} value=&quot;+2&quot; /&gt;
+    &lt;input type=&quot;button&quot; onClick={() =&gt; store.dispatch(square)} value=&quot;乘方&quot; /&gt;
+    {store.getState().fetch.isShow &amp;&amp; &lt;p&gt;{store.getState().fetch.message}&lt;/p&gt;}
+  &lt;/div&gt;,
+  document.getElementById('root')
+)
+render()
+store.subscribe(render)
+</code></pre>
+<h2 id="展示和容器">展示和容器</h2>
+<p>下面来介绍react-redux。前面的代码中，我们是通过store.subscribe()方法监控state状态的变化来更新UI层的。而使用react-redux，可以让组件动态订阅状态树。状态树一旦被修改，组件能自动刷新显示最新数据<br>
+　react-redux将所有组件分成两大类：展示组件和容器组件。展示组件只负责UI呈现，所有数据由参数props提供；容器组件则负责管理数据和业务逻辑，带有内部状态，可使用redux的API。要使用react-redux，就要遵守它的组件拆分规范</p>
+<h3 id="provider">【provider】</h3>
+<p>react-redux提供Provider组件，可以让容器组件默认可以拿到state，而不用当容器组件层级很深时，一级级将state传下去<br>
+将index.js文件更改如下</p>
+<pre><code>// index.js
+import React from 'react'
+import ReactDOM from 'react-dom'
+import store from './store'
+import MathContainer from './container/MathContainer'
+import { Provider } from 'react-redux'
+ReactDOM.render(
+  &lt;Provider store={store}&gt;
+    &lt;MathContainer /&gt;
+  &lt;/Provider&gt;,
+  document.getElementById('root')
+)
+</code></pre>
+<p>按照组件拆分规范，将原来index.js中相关代码，分拆到container/MathContainer和component/Math这两个组件中</p>
+<h3 id="connect">【connect】</h3>
+<p>react-redux提供connect方法，用于从展示组件生成容器组件。connect的意思就是将这两种组件连接起来</p>
+<pre><code>import { connect } from 'react-redux'
+const MathContainer = connect()(Math);
+</code></pre>
+<p>Math是展示组件，MathContainer就是由React-redux通过connect方法自动生成的容器组件<br>
+　　为了定义业务逻辑，需要给出下面两方面的信息<br>
+　　1、输入逻辑：外部的数据(即state对象)如何转换为展示组件的参数<br>
+　　2、输出逻辑：用户发出的动作如何变为Action对象，从展示组件传出去<br>
+　　因此，connect方法的完整API如下</p>
+<pre><code>import {connect} from 'react-redux'
+const MathContainer= connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Math)
+</code></pre>
+<p>上面代码中，connect方法接受两个参数：mapStateToProps和mapDispatchToProps。它们定义了展示组件的业务逻辑。前者负责输入逻辑，即将state映射到UI组件的参数(props)，后者负责输出逻辑，即将用户对展示组件的操作映射成Action</p>
+<h3 id="mapstatetoprops">【mapStateToProps()】</h3>
+<p>mapStateToProps建立一个从外部的state对象到展示组件的props对象的映射关系。作为参数，mapStateToProps执行后应该返回一个对象，里面的每一个键值对就是一个映射</p>
+<pre><code>const mapStateToProps = (state) =&gt; {
+  return {
+    num: getNum(state)                  
+  }  
+}
+</code></pre>
+<p>mapStateToProps的第一个参数总是state对象，还可以使用第二个参数，代表容器组件的props对象。使用ownProps作为参数后，如果容器组件的参数发生变化，也会引发展示组件重新渲染</p>
+<pre><code>const mapStateToProps = (state,ownProps) =&gt; {
+  return {
+    num: getNum(state)                  
+  }  
+}
+</code></pre>
+<p>mapStateToProps会订阅Store，每当state更新的时候，就会自动执行，重新计算展示组件的参数，从而触发展示组件的重新渲染。connect方法可以省略mapStateToProps参数，那样，展示组件就不会订阅Store，就是说Store的更新不会引起展示组件的更新</p>
+<h3 id="mapdispatchtoprops">【mapDispatchToProps】</h3>
+<p>mapDispatchToProps是connect函数的第二个参数，用来建立展示组件的参数到store.dispatch方法的映射。也就是说，它定义了用户的哪些操作应该当作action，传给Store。它可以是一个函数，也可以是一个对象<br>
+　　如果mapDispatchToProps是一个函数，会得到dispatch和ownProps(容器组件的props对象)两个参数</p>
+<pre><code>const mapDispatchToProps = (dispatch,ownProps) =&gt; {
+  return {
+    onSetNumClick: () =&gt; dispatch(setNum())
+  }
+}
+</code></pre>
+<p>mapDispatchToProps作为函数，应该返回一个对象，该对象的每个键值对都是一个映射，定义了展示组件的参数怎样发出action<br>
+　　如果mapDispatchToProps是一个对象，它的每个键名也是对应展示组件的同名参数，键值应该是一个函数，会被当作action creator，返回的action会由redux自动发出<br>
+　　因此，上面的写法简写如下所示</p>
+<pre><code>const mapDispatchToProps = {
+  onsetNumClick: () =&gt; setNum()
+}
+</code></pre>
+<h3 id="components">【components】</h3>
+<pre><code>// components/Math.js
+import React from 'react'
+const Math = ({
+  num,
+  isShow,
+  fetchMessage,
+  onSetNumClick,
+  onAddOneClick,
+  onAddTwoClick,
+  onSqureClick
+}) =&gt; (
+  &lt;section&gt;
+    &lt;p&gt;{num}&lt;/p&gt;
+    &lt;input type=&quot;button&quot; onClick={onSetNumClick} value=&quot;设置Num&quot; /&gt;
+    &lt;input type=&quot;button&quot; onClick={onAddOneClick} value=&quot;+1&quot; /&gt;
+    &lt;input type=&quot;button&quot; onClick={onAddTwoClick} value=&quot;+2&quot; /&gt;
+    &lt;input type=&quot;button&quot; onClick={onSqureClick} value=&quot;乘方&quot; /&gt;
+    {isShow &amp;&amp; &lt;p&gt;{fetchMessage}&lt;/p&gt;}
+  &lt;/section&gt;
+)
+
+export default Math
+
+</code></pre>
+<h3 id="containers">【containers】</h3>
+<pre><code>        // containers/MathContainer.js
+        import { connect } from 'react-redux'
+        import Math from '../components/Math'
+        import { getNum } from '../selectors/math'
+        import { getFetchMessage, getFetchIsShow } from '../selectors/fetch'
+        import { setNum, add, square } from '../actions/math'
+        const mapStateToProps = state =&gt; {
+        return {
+            num: getNum(state),
+            fetchMessage: getFetchMessage(state),
+            isShow: getFetchIsShow(state)
+        }
+        }
+        const mapDispatchToProps = {
+        onSetNumClick: () =&gt; setNum(),
+        onAddOneClick: () =&gt; add(1),
+        onAddTwoClick: () =&gt; add(2),
+        onSqureClick: () =&gt; square
+        }
+        const MathContainer = connect(mapStateToProps, mapDispatchToProps)(Math)
+        export default MathContainer
+</code></pre>
+<h3 id="actions">【actions】</h3>
+<pre><code>// actions/fetch.js
+import { SET_FETCH_MESSAGE, HIDE_FETCH_MESSAGE } from '../constants/ActionTypes'
+export const startFetch = { type: SET_FETCH_MESSAGE,message: '开始发送异步请求' }
+export const successFetch = { type: SET_FETCH_MESSAGE, message: '成功接收数据' }
+export const failFetch = { type: SET_FETCH_MESSAGE, message: '接收数据失败' }
+export const hideFetchMessage = { type: HIDE_FETCH_MESSAGE }
+</code></pre>
+<pre><code>// actions/math.js
+import { ADD, SQUARE, SET } from '../constants/ActionTypes'
+import { startFetch, successFetch, failFetch, hideFetchMessage } from './fetch'
+import axios from 'axios'
+const uri = 'https://jsonplaceholder.typicode.com/posts/2'
+export const add = num =&gt; ({ type: ADD, num })
+export const square = { type: SQUARE }
+export const setNum = () =&gt; (dispatch, getState) =&gt; {
+  dispatch(startFetch)
+  setTimeout(() =&gt; {dispatch(hideFetchMessage)}, 300)
+  return axios
+    .get(uri)
+    .then(res =&gt; {
+      dispatch(successFetch)
+      setTimeout(() =&gt; {dispatch(hideFetchMessage)}, 300)
+      dispatch({ type: SET, num: res.data.id })
+    })
+    .catch(err =&gt; {
+      dispatch(failFetch)
+      setTimeout(() =&gt; {dispatch(hideFetchMessage)}, 300)
+    })
+}
+</code></pre>
+<h3 id="constants">【constants】</h3>
+<pre><code>// constants/ActionTypes.js
+export const ADD = 'ADD'
+export const SQUARE = 'SQUARE'
+export const SET = 'SET'
+export const SET_FETCH_MESSAGE = 'SET_FETCH_MESSAGE'
+export const HIDE_FETCH_MESSAGE = 'HIDE_FETCH_MESSAGE'
+</code></pre>
+<h3 id="reducers">【reducers】</h3>
+<pre><code>// reducers/fetch.js
+import { SET_FETCH_MESSAGE,HIDE_FETCH_MESSAGE } from '../constants/ActionTypes'
+const initState = {
+  message:'',
+  isShow:false
+}
+const fetch = (state = initState, action) =&gt; {
+  switch (action.type) {
+    case SET_FETCH_MESSAGE:
+      return {isShow: true, message: action.message}
+    case HIDE_FETCH_MESSAGE:
+      return { isShow: false, message: '' }
+    default:
+      return state
+  }
+}
+export default fetch
+</code></pre>
+<pre><code>// reducers/index.js
+import { combineReducers } from 'redux'
+import math from './math'
+import fetch from './fetch'
+const rootReducer = combineReducers({
+  math,
+  fetch
+})
+
+export default rootReducer
+</code></pre>
+<pre><code>import { ADD, SQUARE,SET } from '../constants/ActionTypes'
+const math = (state = 10, action) =&gt; {
+  switch (action.type) {
+    case ADD:
+      return state + action.num
+    case SQUARE:
+      return state * state
+    case SET:
+      return action.num
+    default:
+      return state
+  }
+}
+export default math
+</code></pre>
+<h3 id="selectors">【selectors】</h3>
+<pre><code>// selectors/fetch.js
+export const getFetchMessage = state =&gt; state.fetch.message
+export const getFetchIsShow = state =&gt; state.fetch.isShow
+</code></pre>
+<pre><code>// selectors/math.js
+export const getNum = state =&gt; state.math
+</code></pre>
+<h3 id="根目录">【根目录】</h3>
+<pre><code>// index.js
+import React from 'react'
+import ReactDOM from 'react-dom'
+import store from './store'
+import MathContainer from './containers/MathContainer'
+import { Provider } from 'react-redux'
+ReactDOM.render(
+  &lt;Provider store={store}&gt;
+    &lt;MathContainer /&gt;
+  &lt;/Provider&gt;,
+  document.getElementById('root')
+)
+</code></pre>
+<pre><code>// store.js
+import { createStore, applyMiddleware } from 'redux'
+import thunk from 'redux-thunk'
+import rootReducer from './reducers'
+export default createStore(rootReducer,applyMiddleware(thunk))
+</code></pre>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://django-lee-tony.github.io/tag/W8yc190Dr/" class="tag">
+                    react
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://django-lee-tony.github.io/post/feng-zhuang-jian-yi-swiper/">
+                  <h3 class="post-title">
+                    封装简易swiper
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+  <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>
+    hljs.initHighlightingOnLoad()
+  </script>
+
+
+
+
+
+  </body>
+</html>
