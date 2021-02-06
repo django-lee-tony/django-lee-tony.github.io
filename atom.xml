@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://django-lee-tony.github.io</id>
     <title>django </title>
-    <updated>2021-02-06T04:52:35.859Z</updated>
+    <updated>2021-02-06T04:56:48.099Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://django-lee-tony.github.io"/>
     <link rel="self" href="https://django-lee-tony.github.io/atom.xml"/>
@@ -67,12 +67,7 @@
         data() {
             return {
                 timer:null,
-                list:['https://static.0am08m.com/prod/banner/m_4d15e15673c9844eb66ae470dded776661ef1b5b.jpg',
-                    'https://static.0am08m.com//prod/banner/m_24619596aa86a57aae296a646b7f0ec7a8b1dde9.jpg',
-                    'https://static.0am08m.com//prod/banner/m_e7e3b0c41575e855fb17f659a19b82c970c756e5.jpg',
-                    'https://static.0am08m.com//prod/banner/m_0ffa9b4dfd84fada3fd95c9b698d0bce0a0e45ec.jpg',
-                    'https://static.0am08m.com//prod/banner/m_0ff70ce9958439518eb64f770ee76f9f73b2855a.jpg',
-                    'https://static.0am08m.com//prod/banner/m_4c134789294300e3aba0e61fabb6329504f347b9.jpg'
+                list:[
                 ],
                 index:0,
                 userEnter:false
