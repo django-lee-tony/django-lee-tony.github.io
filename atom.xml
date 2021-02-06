@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://django-lee-tony.github.io</id>
     <title>django </title>
-    <updated>2021-02-05T13:01:11.126Z</updated>
+    <updated>2021-02-06T04:52:35.859Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://django-lee-tony.github.io"/>
     <link rel="self" href="https://django-lee-tony.github.io/atom.xml"/>
@@ -10,6 +10,218 @@
     <logo>https://django-lee-tony.github.io/images/avatar.png</logo>
     <icon>https://django-lee-tony.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, django </rights>
+    <entry>
+        <title type="html"><![CDATA[封装简易swiper]]></title>
+        <id>https://django-lee-tony.github.io/post/feng-zhuang-jian-yi-swiper/</id>
+        <link href="https://django-lee-tony.github.io/post/feng-zhuang-jian-yi-swiper/">
+        </link>
+        <updated>2021-02-05T13:04:44.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="因为项目中一些特殊的需求-需要一些特殊的swiper-在三方插件求而不得的情况下-不得已选择自己封装-基于css3属性-transition过度属性以及vue-transition组件封装">因为项目中一些特殊的需求 需要一些特殊的swiper 在三方插件求而不得的情况下 不得已选择自己封装  基于css3属性 transition过度属性以及vue transition组件封装</h2>
+<h3 id="页面部分">页面部分</h3>
+<pre><code>&lt;template&gt;
+    &lt;div&gt;
+        &lt;div class=&quot;bwg-swiper&quot; @mouseenter=&quot;enterTarget&quot; @mouseleave=&quot;leaveTarget&quot;&gt;
+            &lt;div class=&quot;swiper-slide&quot; v-for=&quot;(item,i) in list&quot; :key=&quot;i&quot;&gt;
+                &lt;transition name=&quot;scaleToBig&quot;&gt;
+                    &lt;div class=&quot;swiper-list&quot; v-if=&quot;index==i&quot;&gt;
+                        &lt;img width=&quot;100%&quot; height=&quot;100%&quot; :src=&quot;item&quot; alt=&quot;&quot;&gt;
+                    &lt;/div&gt;
+                &lt;/transition&gt;
+            &lt;/div&gt;
+            &lt;div class=&quot;indicator-par &quot;&gt;
+                &lt;div class=&quot;bwg-indicator indicator&quot; :class=&quot;{'bwg-indicator__active':index==i}&quot; @click=&quot;changIndex(i)&quot; v-for=&quot;(item,i) in list&quot; :key=&quot;i&quot;&gt;
+&lt;!--                    显示的图片--&gt;
+                    &lt;div class=&quot;show-img&quot;&gt;&lt;img :src=&quot;item&quot; alt=&quot;&quot;&gt;&lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;transition enter-active-class=&quot;animated slideInLeft&quot; leave-active-class=&quot;animated slideOutLeft&quot;&gt;
+                &lt;div class=&quot;bwg-prev bwg-swiper-push&quot; v-show=&quot;userEnter&quot; @click=&quot;editIndex('prev')&quot;&gt;〈&lt;/div&gt;
+            &lt;/transition&gt;
+            &lt;transition enter-active-class=&quot;animated slideInRight&quot; leave-active-class=&quot;animated slideOutRight&quot;&gt;
+                &lt;div class=&quot;bwg-next bwg-swiper-push&quot; v-show=&quot;userEnter&quot; @click=&quot;editIndex('next')&quot;&gt;〉&lt;/div&gt;
+            &lt;/transition&gt;
+
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/template&gt;
+</code></pre>
+<h3 id="js部分">js部分</h3>
+<pre><code>&lt;script&gt;
+
+    export default {
+        name:&quot;swiperCom&quot;,
+        props:{
+            autoplay:{
+                type:Boolean,
+                default:true
+            },
+            loop:{
+                type:Boolean,
+                default:true
+            },
+            delay:{
+                type:Number,
+                default:3000
+            }
+        },
+        data() {
+            return {
+                timer:null,
+                list:['https://static.0am08m.com/prod/banner/m_4d15e15673c9844eb66ae470dded776661ef1b5b.jpg',
+                    'https://static.0am08m.com//prod/banner/m_24619596aa86a57aae296a646b7f0ec7a8b1dde9.jpg',
+                    'https://static.0am08m.com//prod/banner/m_e7e3b0c41575e855fb17f659a19b82c970c756e5.jpg',
+                    'https://static.0am08m.com//prod/banner/m_0ffa9b4dfd84fada3fd95c9b698d0bce0a0e45ec.jpg',
+                    'https://static.0am08m.com//prod/banner/m_0ff70ce9958439518eb64f770ee76f9f73b2855a.jpg',
+                    'https://static.0am08m.com//prod/banner/m_4c134789294300e3aba0e61fabb6329504f347b9.jpg'
+                ],
+                index:0,
+                userEnter:false
+            };
+        },
+        mounted() {
+          this.startMove()
+        },
+        methods:{
+            //轮播开始计时
+            startMove(){
+                if(this.autoplay) { //是否自动轮播
+                    if(this.timer) clearInterval(this.timer);
+                    this.timer=setInterval(()=&gt;{
+                        this.index++
+                        if(this.index&gt;this.list.length-1){
+                            this.index=0
+                        }
+
+                    },this.delay)
+                }
+            },
+            //关闭计时器
+            closeTimer(){
+              if(this.timer){
+                  clearInterval(this.timer)
+              }
+            },
+            //鼠标划入
+            enterTarget(){
+                // console.log(1111);
+                this.userEnter=true
+               this.closeTimer()
+            },
+            //鼠标移出
+            leaveTarget(){
+
+                this.userEnter=false;
+                this.startMove()
+            },
+            changIndex(i){
+                this.index=i
+            },
+            editIndex(type){
+                if(type=='prev'){
+                   if(this.index&lt;=0){
+                       this.index=this.list.length-1
+                   }else{
+                       this.index--
+                   }
+                }else{
+                    if(this.index&gt;=this.list.length-1){
+                        this.index=0
+                    }else{
+                        this.index++
+                    }
+                }
+            }
+        }
+    }
+&lt;/script&gt;
+</code></pre>
+<h3 id="style部分">style部分</h3>
+<pre><code>&lt;style lang=&quot;scss&quot; scoped&gt;
+    .bwg-swiper{
+        height: 600px;
+        width: 100%;
+        min-width: $base-min-width;
+        position: relative;
+        z-index: 10;
+        overflow: hidden;
+
+        .swiper-slide{
+
+            width: 1920px;
+            margin: 0 auto;
+            height: 100%;
+            /*width: 100%;*/
+            /*height: 100%;*/
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            top: 0;
+            .swiper-list{
+                width: 100%;
+                height: 100%;
+                position: absolute;
+                left: 0;
+                top: 0;
+            }
+        }
+        .indicator-par{
+            position: absolute;
+            width: 100%;
+            left: 0;
+            bottom: 30px;
+            z-index: 12;
+            display: flex;
+            justify-content: center;
+            .indicator{
+                position: relative;
+                &amp;:hover{
+                  .show-img{
+                      display: block;
+                  }
+                }
+               .show-img{
+                   position: absolute;
+                   width: 200px;
+                   height: 50px;
+                   border-radius: 5px;
+                   box-shadow: 0px 0px 15px #00000029;
+                   left: -90px;
+                   top: -70px;
+                   display: none;
+                   overflow: hidden;
+                   img{
+                       width: 100%;
+                       height: 100%;
+                   }
+               }
+            }
+        }
+        .bwg-swiper-push{
+            width: 40px;
+            height: 80px;
+            position: absolute;
+            top: 220px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            color: #fff;
+            background-color: #666;
+            z-index: 13;
+            cursor: pointer;
+        }
+        .bwg-prev{
+            left: 0;
+        }
+        .bwg-next{
+            right: 0;
+        }
+    }
+&lt;/style&gt;
+
+</code></pre>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[vue webpack常规配置]]></title>
         <id>https://django-lee-tony.github.io/post/vue-webpack-chang-gui-pei-zhi/</id>
