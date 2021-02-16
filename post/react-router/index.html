@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>react-router | django </title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://django-lee-tony.github.io/favicon.ico?v=1613463162822">
+<link rel="stylesheet" href="https://django-lee-tony.github.io/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="路由用来分发请求。后端是提供服务的，所以它的路由是在找controller，前端是显示页面的，所以它的路由是在找component。本文将详细介绍react-router-dom的内容
+Router
+Router是路由器组件的低阶接口，通常..." />
+    <meta name="keywords" content="react" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://django-lee-tony.github.io">
+        <img src="https://django-lee-tony.github.io/images/avatar.png?v=1613463162822" class="site-logo">
+        <h1 class="site-title">django </h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="https://django-lee-tony.github.io" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="https://django-lee-tony.github.io/post/websocket-feng-zhuang-zai-vuex-zhong" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      温故而知新
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://django-lee-tony.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">react-router</h2>
+            <div class="post-date">2021-02-16</div>
+            
+            <div class="post-content" v-pre>
+              <h3 id="路由用来分发请求-后端是提供服务的所以它的路由是在找controller前端是显示页面的所以它的路由是在找component-本文将详细介绍react-router-dom的内容">路由用来分发请求。后端是提供服务的，所以它的路由是在找controller，前端是显示页面的，所以它的路由是在找component。本文将详细介绍react-router-dom的内容</h3>
+<h2 id="router">Router</h2>
+<p>Router是路由器组件的低阶接口，通常会使用如下某个高阶router来替代它</p>
+<pre><code>&lt;BrowserRouter&gt;
+&lt;HashRouter&gt;
+&lt;MemoryRouter&gt;
+&lt;NativeRouter&gt;
+&lt;StaticRouter&gt;
+</code></pre>
+<h3 id="browserrouter">【BrowserRouter】</h3>
+<p>最常用的是BrowserRouter</p>
+<pre><code>import { BrowserRouter } from 'react-router-dom'
+
+&lt;BrowserRouter
+  basename={optionalString}
+  forceRefresh={optionalBool}
+  getUserConfirmation={optionalFunc}
+  keyLength={optionalNumber}
+&gt;
+  &lt;App/&gt;
+&lt;/BrowserRouter&gt;
+</code></pre>
+<p>1、basename: 当前位置的基准 URL。如果页面部署在服务器的二级（子）目录，需要将 basename 设置到此子目录。 正确的 URL 格式是前面有一个前导斜杠，但不能有尾部斜杠</p>
+<pre><code>&lt;BrowserRouter basename=&quot;/calendar&quot;/&gt;
+</code></pre>
+<p>2、getUserConfirmation：当导航需要确认时执行的函数。默认使用 window.confirm</p>
+<pre><code>// 使用默认的确认函数
+const getConfirmation = (message, callback) =&gt; {
+  const allowTransition = window.confirm(message)
+  callback(allowTransition)
+}
+
+&lt;BrowserRouter getUserConfirmation={getConfirmation}/&gt;
+</code></pre>
+<p>3、forceRefresh：当设置为 true 时，在导航的过程中整个页面将会刷新。 只有当浏览器不支持 HTML5 的 history API 时，才设置为 true</p>
+<pre><code>const supportsHistory = 'pushState' in window.history
+&lt;BrowserRouter forceRefresh={!supportsHistory}/&gt;
+</code></pre>
+<p>4、keyLength：location.key 的长度。默认是 6</p>
+<pre><code>&lt;BrowserRouter keyLength={12}/&gt;
+</code></pre>
+<p>5、BrowserRouter只能渲染单一子元素</p>
+<h3 id="route">Route</h3>
+<p>Route是react-router中最重要的组件，用来匹配请求并渲染相应组件<br>
+1、path 路径的匹配值，可以包括以下几种特殊符号</p>
+<pre><code>:paramName – 匹配一段位于 /、? 或 # 之后的 URL。 命中的部分将被作为一个参数
+() – 在它内部的内容被认为是可选的
+* – 匹配任意字符（非贪婪的）直到命中下一个字符或者整个 URL 的末尾，并创建一个 splat 参数
+</code></pre>
+<p>例子如下所示：</p>
+<pre><code>&lt;Route path=&quot;/hello/:name&quot;&gt;         // 匹配 /hello/michael 和 /hello/ryan
+&lt;Route path=&quot;/hello(/:name)&quot;&gt;       // 匹配 /hello, /hello/michael 和 /hello/ryan
+&lt;Route path=&quot;/files/*.*&quot;&gt;           // 匹配 /files/hello.jpg 和 /files/path/to/hello.jpg
+</code></pre>
+<p>[注意]Route组件不能像普通组件一样，以属性的形式传递参数，但可以通过path属性来传递。但一定要区分router后面的:_id或:id</p>
+<pre><code>'/category/:_id'
+</code></pre>
+<p>2、component 要显示的组件</p>
+<pre><code>import { BrowserRouter as Router, Route } from 'react-router-dom'
+
+&lt;Router&gt;
+  &lt;div&gt;
+    &lt;Route exact path=&quot;/&quot; component={Home}/&gt;
+    &lt;Route path=&quot;/news&quot; component={NewsFeed}/&gt;
+  &lt;/div&gt;
+&lt;/Router&gt;
+</code></pre>
+<p>3、render 函数中return的值就是要显示的内容</p>
+<pre><code>&lt;Route path=&quot;/home&quot; render={() =&gt; &lt;div&gt;Home&lt;/div&gt;}/&gt;
+</code></pre>
+<p>4、children与render的区别在于，不管有没有匹配，都想显示的内容</p>
+<pre><code>const ListItemLink = ({ to, ...rest }) =&gt; (
+  &lt;Route path={to} children={({ match }) =&gt; (
+    &lt;li className={match ? 'active' : ''}&gt;
+      &lt;Link to={to} {...rest}/&gt;
+    &lt;/li&gt;
+  )}/&gt;
+)
+</code></pre>
+<p>[注意]component/render/children只能三个选一个使用</p>
+<h3 id="匹配规则">【匹配规则】</h3>
+<p>默认地，路由进行宽松匹配。在下面例子中，路由匹配到/one时，既显示组件A，也显示组件B</p>
+<pre><code>&lt;Route  path=&quot;/one&quot; component={A}/&gt;
+&lt;Route  path=&quot;/one/two&quot; component={B}/&gt;
+</code></pre>
+<p>如果要进行确切匹配，则需要添加exact属性。这样，路由匹配到/one时，只显示组件A</p>
+<pre><code>&lt;Route  exact path=&quot;/one&quot; component={A}/&gt;
+&lt;Route  path=&quot;/one/two&quot; component={B}/&gt;
+</code></pre>
+<p>还有一种是严格匹配，即斜杠也必须严格匹配。下面例子中，路由匹配到/one/时，会显示组件A，但匹配到/one时，什么都不会显示<br>
+<code>&lt;Route strict path=&quot;/one/&quot; component={A}/&gt;</code><br>
+　[注意]严格匹配并不是确切匹配。下面例子中，路由匹配到/one时，即显示组件A，也显示组件B</p>
+<pre><code>&lt;Route  strict path=&quot;/one&quot; component={A}/&gt;
+&lt;Route  path=&quot;/one/two&quot; component={B}/&gt;
+</code></pre>
+<p>如果要确切匹配，则需要<br>
+<code>&lt;Route exact strict path=&quot;/one&quot; component={A}/&gt;</code><br>
+　　但是，一般地，strict属性很少使用</p>
+<h3 id="属性">【属性】</h3>
+<p>Route默认携带三个props：包括match、location、history<br>
+　　如果使用component，则使用this.props来获取，如果是render，则在回调函数中使用参数(props)=&gt;{}来获取<br>
+　　1、match<br>
+　　match包括以下属性</p>
+<pre><code>params 键值对
+isExact 是否确切匹配
+path 路径中设置的值
+url URL中的path值
+</code></pre>
+<p>2、location<br>
+　　location中包含如下属性<br>
+　　[注意]直接访问location，而不是访问history.location</p>
+<pre><code>{
+  key: 'ac3df4', // not with HashHistory!
+  pathname: '/somewhere'
+  search: '?some=search-string',
+  hash: '#howdy',
+  state: {
+    [userDefined]: true
+  }
+}
+</code></pre>
+<p>通过Link传递的state，可以在location中获取到<br>
+[注意]刚开始时，或者直接刷新浏览器，state是没有值的，只有跳转到该链接时，state才有值。再后来，刷新也有值了<br>
+3、history<br>
+　　history包含如下属性</p>
+<pre><code>length: history栈的长度
+action: 当前的action
+location: 当前的location对象
+</code></pre>
+<p>history包含如下方法</p>
+<pre><code>push()
+goBack() = go(-1)
+goForward() = go(1)
+go() 跳转到 history栈中的哪个enter
+replace(path, [state]) 替换history栈中的当前entry
+push(path, [state])  添加当前entry到history栈中
+</code></pre>
+<h3 id="redirect">Redirect</h3>
+<p>Redirect将页面导航到新位置，新位置将覆盖history栈中的当前位置，类似于服务器端的重定向(HTTP 3xx)<br>
+to属性可以是一个字符串，表示跳转的地址</p>
+<pre><code>&lt;Route exact path=&quot;/&quot; render={() =&gt; (
+  loggedIn ? (
+    &lt;Redirect to=&quot;/dashboard&quot;/&gt;
+  ) : (
+    &lt;PublicHomePage/&gt;
+  )
+)}/&gt;
+</code></pre>
+<p>to属性也可以是一个对象</p>
+<pre><code>&lt;Redirect to={{
+  pathname: '/login',
+  search: '?utm=your+face',
+  state: { referrer: currentLocation }
+}}/&gt;
+</code></pre>
+<p>push属性为true时，表示添加新记录到history栈中，而不是替换当前记录<br>
+<code>&lt;Redirect push to=&quot;/somewhere/else&quot;/&gt;</code><br>
+　Link是对a标签的封装，提供无刷新的页面跳转。Link标签主要的属性是to属性<br>
+　1、一般地，to是一个字符串<br>
+<code>&lt;Link to=&quot;/about&quot;&gt;关于&lt;/Link&gt;</code><br>
+2、也可以写成对象的形式</p>
+<pre><code>&lt;Link to={{
+  pathname: '/courses',
+  search: '?sort=name',
+  hash: '#the-hash',
+  state: { fromDashboard: true }
+}}/&gt;
+</code></pre>
+<p>[注意]在Link里的子组件或同组件的点击事件，最好加上阻止默认行为和阻止冒泡</p>
+<pre><code>&lt;Link&gt;
+  &lt;div onclick={}&gt;&lt;/div&gt;
+&lt;/Link&gt;
+&lt;Link onclick={}&gt;
+</code></pre>
+<h3 id="navlink">【NavLink】</h3>
+<p>NavLink相对于Link来说，增加了一些样式属性<br>
+　　activeClassName表示被匹配的a标签的样式名；activeStyle表示被匹配的a标签的样式</p>
+<pre><code>&lt;NavLink
+  to=&quot;/faq&quot;
+  activeClassName=&quot;selected&quot;
+&gt;FAQs&lt;/NavLink&gt;
+</code></pre>
+<pre><code>&lt;NavLink
+  to=&quot;/faq&quot;
+  activeStyle={{
+    fontWeight: 'bold',
+    color: 'red'
+   }}
+&gt;FAQs&lt;/NavLink&gt;
+</code></pre>
+<p>注意： link和history.push都不支持指向外网地址，如果要跳转到外网，则需要使用window对象下的location对象</p>
+<h3 id="switch">Switch</h3>
+<p>渲染Route或Redirect匹配到的第一个子元素</p>
+<pre><code>&lt;Switch&gt;
+  &lt;Route exact path=&quot;/&quot; component={Home}/&gt;
+  &lt;Route path=&quot;/about&quot; component={About}/&gt;
+  &lt;Route path=&quot;/:user&quot; component={User}/&gt;
+  &lt;Route component={NoMatch}/&gt;
+&lt;/Switch&gt;
+</code></pre>
+<p>[注意]switch必须直接包括Route，中间不可包含div，否则不生效</p>
+<h3 id="跳转">跳转</h3>
+<p>如果在实现逻辑跳转，可使用如下代码实现</p>
+<pre><code>// utils/history.js
+import createBrowserHistory from 'history/createBrowserHistory'
+const customHistory = createBrowserHistory()
+export default customHistory
+</code></pre>
+<p>引用如下</p>
+<pre><code>import  history  from '@/utils/history'
+// 跳转到首页
+history.push('/')
+</code></pre>
+<p>要特别注意的是，如果使用utils/history.js，需要使用Router history={history}，而不是BrowserRouter<br>
+　　因为全局只能有一个history实例。 使用import { BrowserRouter as Router } 语句，会自动创建一个history实例的，相当于有两个实例，则会出现URL发生变化，刷新页面后，页面才跳转的情况</p>
+<pre><code>import { Router, Route, Switch, Redirect } from 'react-router-dom'
+import history from '@/utils/history'
+
+&lt;Router history={history}&gt;
+  &lt;Switch&gt;
+    &lt;Route path=&quot;/login&quot; component={Login} /&gt;
+    &lt;Route path=&quot;/&quot; render={props =&gt; {if (sessionStorage.getItem('token') &amp;&amp; sessionStorage.getItem('user')) {return &lt;Home {...props} /&gt;
+        }
+        return &lt;Redirect to=&quot;/login&quot; /&gt;
+      }} /&gt;
+  &lt;/Switch&gt;
+&lt;/Router&gt;
+</code></pre>
+<h3 id="传参">【传参】</h3>
+<p>history.push方法也可以携带参数，方法如下</p>
+<pre><code>history.push({
+  pathname: '/about',
+  search: '?the=search',
+  state: { some: 'state' }
+})
+</code></pre>
+<h3 id="基础案例">基础案例</h3>
+<pre><code>import React from 'react'
+import {
+  BrowserRouter as Router,
+  Route,
+  Link
+} from 'react-router-dom'
+
+// 三个基础呈现组件
+
+const Home = () =&gt; (
+  &lt;div&gt;
+    &lt;h2&gt;Home&lt;/h2&gt;
+  &lt;/div&gt;
+)
+
+const About = () =&gt; (
+  &lt;div&gt;
+    &lt;h2&gt;About&lt;/h2&gt;
+  &lt;/div&gt;
+)
+
+const Topic = ({ match }) =&gt; (
+  &lt;div&gt;
+    &lt;h3&gt;{match.params.topicId}&lt;/h3&gt;
+  &lt;/div&gt;
+)
+
+// 一个内嵌的组件
+
+const Topics = ({ match }) =&gt; (
+  &lt;div&gt;
+    &lt;h2&gt;Topics&lt;/h2&gt;
+    &lt;ul&gt;
+      &lt;li&gt;
+        &lt;Link to={`${match.url}/rendering`}&gt;
+          Rendering with React
+        &lt;/Link&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;Link to={`${match.url}/components`}&gt;
+          Components
+        &lt;/Link&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;Link to={`${match.url}/props-v-state`}&gt;
+          Props v. State
+        &lt;/Link&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+
+    &lt;Route path={`${match.url}/:topicId`} component={Topic}/&gt;
+    &lt;Route exact path={match.url} render={() =&gt; (
+      &lt;h3&gt;Please select a topic.&lt;/h3&gt;
+    )}/&gt;
+  &lt;/div&gt;
+)
+
+// 首页组件
+
+const BasicExample = () =&gt; (
+  &lt;Router&gt;
+    &lt;div&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;Link to=&quot;/&quot;&gt;Home&lt;/Link&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;Link to=&quot;/about&quot;&gt;About&lt;/Link&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;Link to=&quot;/topics&quot;&gt;Topics&lt;/Link&gt;&lt;/li&gt;
+      &lt;/ul&gt;
+
+      &lt;hr/&gt;
+
+      &lt;Route exact path=&quot;/&quot; component={Home}/&gt;
+      &lt;Route path=&quot;/about&quot; component={About}/&gt;
+      &lt;Route path=&quot;/topics&quot; component={Topics}/&gt;
+    &lt;/div&gt;
+  &lt;/Router&gt;
+)
+export default BasicExample
+</code></pre>
+<h3 id="exact">exact</h3>
+<p>exact表示路由需要确切匹配，容易忽略的一点是，它与redux也有着非常密切的关系下面的代码是常见的增删改查的路由设置</p>
+<pre><code>&lt;Switch&gt;
+  &lt;Route path=&quot;/post/add&quot; component={AddPost} /&gt;  
+  &lt;Route exact path=&quot;/post/:id&quot; component={ShowPost} /&gt;        
+  &lt;Route path=&quot;/post/:id/update&quot; component={UpdatePost} /&gt;
+  &lt;Route path=&quot;/post/:id/delete&quot; component={DeletePost} /&gt;
+&lt;/Switch&gt;
+</code></pre>
+<p>代码中，通向showPost的路由设置了exact。一般地，showPost通过fetch获取了post，并保存到store中的state.post中<br>
+　　如果此时点击到updatePost中，可以通过state.post来得到值。而如果在updatePost页面直接刷新的话，则state.post值为空<br>
+　　如果要确保页面刷新后仍然能够取得值，则需要通过route中的location传值<br>
+　　但是，这种方法有两个缺陷。一个是不访问showPost，而直接访问UpdatePost不会获得传递的值；另一个是直接在地址栏中更改URL也不会获取传递的值<br>
+　　2、去掉exact和switch，同时需要更改样式和路由。使得path=&quot;/post/:id/update&quot;时，可以同时匹配ShowPost和UpdatePost，且UpdatePost的页面可以完全覆盖ShowPost的页面</p>
+<pre><code>&lt;Route path=&quot;/posts/add&quot; component={AddPost} /&gt;  
+&lt;Route path=&quot;/post/:id&quot; component={ShowPost} /&gt;        
+&lt;Route path=&quot;/post/:id/update&quot; component={UpdatePost} /&gt;
+&lt;Route path=&quot;/post/:id/delete&quot; component={DeletePost} /&gt;
+</code></pre>
+<p>但是，由于这种方法对样式的定制化需求较高，都需要设置为定位元素，且根据覆盖关系来确定z-index。并且页面尺寸都需要保持一致。可扩展性不强</p>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://django-lee-tony.github.io/tag/W8yc190Dr/" class="tag">
+                    react
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://django-lee-tony.github.io/post/react-xue-xi-zhi-react-redux/">
+                  <h3 class="post-title">
+                    react学习之 react-redux
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+  <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>
+    hljs.initHighlightingOnLoad()
+  </script>
+
+
+
+
+
+  </body>
+</html>
