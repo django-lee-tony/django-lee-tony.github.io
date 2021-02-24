@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://django-lee-tony.github.io</id>
     <title>django </title>
-    <updated>2021-02-24T06:36:49.338Z</updated>
+    <updated>2021-02-24T07:05:50.706Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://django-lee-tony.github.io"/>
     <link rel="self" href="https://django-lee-tony.github.io/atom.xml"/>
@@ -10,6 +10,221 @@
     <logo>https://django-lee-tony.github.io/images/avatar.png</logo>
     <icon>https://django-lee-tony.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, django </rights>
+    <entry>
+        <title type="html"><![CDATA[vue3 composition API]]></title>
+        <id>https://django-lee-tony.github.io/post/vue3-composition-api/</id>
+        <link href="https://django-lee-tony.github.io/post/vue3-composition-api/">
+        </link>
+        <updated>2021-02-24T06:37:43.000Z</updated>
+        <content type="html"><![CDATA[<h3 id="vue3中文文档httpsvue3jscndocszh">vue3中文文档：https://vue3js.cn/docs/zh/</h3>
+<h2 id="vue2x还有哪些不足">vue2.x还有哪些不足</h2>
+<p>vue2.x对数组对象的深层监听无法实现。因为组件每次渲染都是将data里的数据通过defineProperty进行响应式或者双向绑定上，之前没有后加的属性是不会被绑定上，也就不会触发更新渲染。<br>
+vue2.x在模板编译过程中会涉及到许多不必要的CPU工作。<br>
+随着功能的增长，复杂组件的代码变得难以维护。<br>
+vue2.x是采用Facebook的Flow做类型检查，但在某些情况下推断有问题，且对typescript支持不太友好（需要使用一堆装饰器语法）。</p>
+<h2 id="vue30有哪些优化">vue3.0有哪些优化</h2>
+<p>更好的代码管理方式：monorepo 根据功能将不同的模块拆分到packages目录下不同的子目录中。这样使得模块拆分更细化，职责划分更明确，模块之间的依赖关系也更加明确，开发人员也更容易阅读、理解和更改所有模块源码，提高代码的可维护性。<br>
+采用typescript开发，也省去了单独维护d.ts文件的麻烦。</p>
+<h3 id="性能优化">性能优化</h3>
+<p>源码体积优化：移除了一些冷门的feature（比如filter、inline-template等），引入tree-shaking技术减少打包体积。<br>
+数据劫持优化：使用Proxy代替vue2.x中的defineProperty，能够深层监听数组对象的变化。<br>
+编译优化：检测出模板中的静态节点、子树甚至数据对象，并在生成的代码中将它们提升到渲染函数之外。这样可以避免在每次渲染时重新创建这些对象，从而大大提高内存使用率并减少垃圾回收的频率。<br>
+语法API优化：推出composition API优化逻辑组合和优化逻辑复用。</p>
+<h1 id="composition-api">composition API</h1>
+<h2 id="setup">setup</h2>
+<p>setup函数是Composition API逻辑组织的入口。</p>
+<pre><code>它是在props、data、computed、methods、生命周期函数之前运行的。返回一个对象，该对象上的属性将合并到组件模板的渲染上下文中，还可以返回一个render函数
+</code></pre>
+<pre><code>&lt;template&gt;
+  &lt;div&gt;
+    &lt;div&gt;count的值为: {{ count }}&lt;/div&gt;
+    &lt;div&gt;double的值为: {{ double }}&lt;/div&gt;
+    &lt;el-button type=&quot;primary&quot; @click=&quot;increment&quot;&gt;
+      增加count值
+    &lt;/el-button&gt;
+    &lt;div&gt;title的值为: {{ title }}&lt;/div&gt;
+    &lt;el-button @click=&quot;decrement&quot;&gt;
+      修改title的值
+    &lt;/el-button&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+&lt;script lang=&quot;ts&quot;&gt;
+import {
+  defineComponent,
+  reactive,
+  ref,
+  toRefs,
+  computed,
+  onMounted
+} from &quot;vue&quot;;
+export default defineComponent({
+  setup() {
+    const count = ref(0);
+    const increment = () =&gt; {
+      count.value++;
+    };
+    const state = reactive({
+      title: &quot;vue3.0&quot;,
+      decrement: () =&gt; {
+        state.title = &quot;vue3.0 + typescript&quot;;
+      }
+    });
+    const double = computed(() =&gt; count.value * 2);
+    onMounted(() =&gt; {
+      console.info(&quot;onMounted&quot;);
+    });
+    return {
+      ...toRefs(state),
+      count,
+      increment,
+      double
+    };
+  }
+});
+&lt;/script&gt;
+
+</code></pre>
+<p>在setup函数内部，定义了一个响应式对象 state，它是通过 reactive API 创建的（还可以使用ref API创建）。</p>
+<h2 id="reactive">reactive</h2>
+<p>reactive是实现响应式的一种方法，它接收对象作为参数，返回的时候必须要使用toRefs包裹（toRefs函数是将reactive创建的响应式对象，转化成为普通的对象，并且这个对象上的每个节点，都是ref()类型的响应式数据）。</p>
+<h2 id="ref">ref</h2>
+<p>ref 和 reactive 一样都是实现响应式数据的方法，它传入一个值作为参数，返回一个基于该值的响应式Ref对象。如上面的示例代码一样，通过修改count.value的值，从而触发模板的重新渲染。</p>
+<h2 id="computed">computed</h2>
+<p>computed是一个函数，它接收一个回调函数作为参数，返回一个基于该值的响应式Ref对象。也可以接收一个对象形式（对象中只有set和get）作为参数。</p>
+<pre><code>&lt;script lang=&quot;ts&quot;&gt;
+import { defineComponent, ref, computed } from &quot;vue&quot;;
+export default defineComponent({
+  setup() {
+    const count = ref(0);
+    const increment = () =&gt; {
+      count.value++;
+    };
+    const double = computed(() =&gt; count.value * 2);
+    // const double = computed({
+    //   get() {
+    //     return count.value * 3;
+    //   },
+    //   set(val) {
+    //     console.log(val);
+    //     count.value = val - 1;
+    //   }
+    // });
+    return {
+      count,
+      increment,
+      double
+    };
+  }
+});
+&lt;/script&gt;
+</code></pre>
+<h2 id="watcheffect">watchEffect</h2>
+<p>watchEffect立即执行传入的一个函数，同时响应式追踪其依赖，并在其依赖变更时重新运行该函数。它能够实现停止侦听，清除副作用、副作用刷新时机和侦听器调试行为</p>
+<pre><code>&lt;script lang=&quot;ts&quot;&gt;
+import { defineComponent, ref, watchEffect } from &quot;vue&quot;;
+export default defineComponent({
+  setup() {
+    const count = ref(0);
+    watchEffect(() =&gt; console.info(count.value)); //0
+    setTimeout(() =&gt; {
+      count.value++; //1
+    }, 100);
+    return { count };
+  }
+});
+&lt;/script&gt;
+当 watchEffect 在组件的 setup() 函数或生命周期钩子被调用时，侦听器会被链接到该组件的生命周期，并在组件卸载时自动停止。在一些情况下，也可以显式调用返回值以停止侦听。
+const stop = watchEffect(() =&gt; {
+  /* ... */
+})
+
+// later
+stop()
+</code></pre>
+<p>侦听副作用传入的函数可以接收一个 onInvalidate 函数作入参，用来注册清理失效时的回调。当以下情况发生时，这个失效回调会被触发：副作用即将重新执行时或侦听器被停止。</p>
+<pre><code>watchEffect(onInvalidate =&gt; {
+  const token = performAsyncOperation(id.value)
+  onInvalidate(() =&gt; {
+    // id has changed or watcher is stopped.
+    // invalidate previously pending async operation
+    token.cancel()
+  })
+})
+
+</code></pre>
+<h2 id="watch">watch</h2>
+<p>watch是一个函数，它不会立即执行，只有当监听源发生变化时才会执行。它可以监听多个数据，还有与watchEffect共享的行为（停止侦听，清除副作用、副作用刷新时机和侦听器调试行为。）。它接收两个参数。<br>
+watch的第一个参数可以是一个响应式Ref对象</p>
+<pre><code>&lt;script lang=&quot;ts&quot;&gt;
+import { defineComponent, ref, watch } from &quot;vue&quot;;
+export default defineComponent({
+  setup() {
+    const count = ref(0);
+    watch(count, () =&gt; console.info(count.value));
+    return { count };
+  }
+});
+&lt;/script&gt;
+</code></pre>
+<p>watch的第一个参数可以是一个getter函数</p>
+<pre><code>&lt;script lang=&quot;ts&quot;&gt;
+import { defineComponent, reactive, toRefs, watch } from &quot;vue&quot;;
+export default defineComponent({
+  setup() {
+    const state = reactive({
+      title: &quot;&quot;,
+      decrement: () =&gt; {
+        state.title += &quot;hi!&quot;;
+      }
+    });
+    watch(
+      () =&gt; state.title,
+      () =&gt; {
+        document.title = &quot;updated &quot; + state.title;
+      }
+    );
+    return { ...toRefs(state) };
+  }
+});
+&lt;/script&gt;
+</code></pre>
+<p>监听多个数据源</p>
+<pre><code>&lt;script lang=&quot;ts&quot;&gt;
+import { defineComponent, reactive, toRefs, watch } from &quot;vue&quot;;
+export default defineComponent({
+  setup() {
+  	const count = ref(0);
+    const state = reactive({
+      title: &quot;&quot;,
+      decrement: () =&gt; {
+        state.title += &quot;hi!&quot;;
+      }
+    });
+    watch([count, () =&gt; state.title], () =&gt; {
+      document.title = &quot;updated &quot; + state.title + count.value;
+    });
+    return { ...toRefs(state) };
+  }
+});
+&lt;/script&gt;
+</code></pre>
+<h2 id="生命周期">生命周期</h2>
+<p>在vue3.0中，生命周期钩子函数做了全面替换，映射关系如下：</p>
+<pre><code>1. beforeCreate -&gt; 使用 setup() 
+2. created -&gt; 使用 use setup() 
+3. beforeMount -&gt; onBeforeMount 
+4. mounted -&gt; onMounted 
+5. beforeUpdate -&gt; onBeforeUpdate 
+6. updated -&gt; onUpdated 
+7. beforeDestroy-&gt; onBeforeUnmount 
+8. destroyed -&gt; onUnmounted 
+9. activated -&gt; onActivated 
+10. deactivated -&gt; onDeactivated 
+11. errorCaptured -&gt; onErrorCaptured
+</code></pre>
+<p>除此之外，Vue.js 3.0 还新增了两个用于调试的生命周期 API：onRenderTracked 和 onRenderTriggered。</p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[ES6之Proxy]]></title>
         <id>https://django-lee-tony.github.io/post/es6-zhi-proxy/</id>
@@ -1793,333 +2008,6 @@ Message.closeAll = function() {
 export default Message;
 </code></pre>
 <p>##最后在需要调用的地方 引入即可  使用方式与element message类似</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[websocket封装在vuex中]]></title>
-        <id>https://django-lee-tony.github.io/post/websocket-feng-zhuang-zai-vuex-zhong/</id>
-        <link href="https://django-lee-tony.github.io/post/websocket-feng-zhuang-zai-vuex-zhong/">
-        </link>
-        <updated>2021-02-05T09:44:49.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="websocket封装暴露方法给vuex调用">websocket封装暴露方法给vuex调用</h1>
-<h2 id="在vuex创建一个socket模块-用于连接以及接收消息">在vuex创建一个socket模块 用于连接以及接收消息</h2>
-<pre><code class="language-$xslt">//socket.js
-let timer,timer1;
-import router from &quot;../../router&quot;;
-import Socket from &quot;../../utils/socket&quot;;
-    export default {
-        state: {
-            ws: null, // websorket实例
-            wsAddress:null,//websocket地址
-            visible:false,//页面弹窗显隐状态值
-            acceptMessage:{},//接收的信息
-        },
-        mutations: {
-            /**
-             * 将socket赋值给ws 方便在组件中调用
-             */
-            CONTACT_SOCKET (state, { commit,dispatch }) {
-                // let p=new Socket(commit,null,state.wsAddress)
-                state.ws = new Socket(commit,dispatch,state.wsAddress?state.wsAddress:null);
-
-            },
-            /**
-             * 接收消息
-             */
-            ACCEPT_MESSAGE(state,data){
-                state.acceptMessage=data;
-            },
-            /**
-             * 获取到init接口中的ws地址后 再将socket初始化连接
-             */
-            INSERT_SOCKET(state,val){
-                if(val.value){
-                    state.wsAddress=val.value
-                }
-            },
-            /**
-             * 关闭socket 在退出登录时触发
-             */
-            CLOSE_SOCKET(state){
-                if(state.ws){
-                    state.ws.$soctket_close();
-                    state.ws=null
-                }
-
-                    // console.log(state.ws);
-            },
-            /**
-             * 控制弹框的状态值
-             */
-            OPEN_DIALOG(state,flag){
-                if(timer) clearTimeout(timer)
-                if(flag){
-                    timer=setTimeout(()=&gt;{
-                        state.visible=false
-                    },3000)
-                }
-                state.visible=flag
-            },
-        },
-        actions: {
-            /**
-             * 请求得到ws地址后存入state
-             */
-            SOCKET_INIT ({commit, state},val) {
-                commit('INSERT_SOCKET',val)//存入ws地址
-            },
-            /**
-             * 初始化链接socket
-             */
-            CONTACT_SOCKET({dispatch,commit}){
-                commit('CONTACT_SOCKET', { commit ,dispatch}) //把commit作为参数
-            },
-            /**
-             * 接收消息
-             */
-            ['ACCEPT_MESSAGE']({dispatch,commit},data){
-                let message=JSON.parse(data);
-                let {action}=message;
-                if(action==='KEEP_ALIVE') return ;
-              
-            }
-        }
-    }
-</code></pre>
-<h2 id="封装websocket">封装websocket</h2>
-<pre><code class="language-$xslt">//utils/socket.js
-/*
-* socket长连接和公共管理方案
-* websocket和 VueX 还有 Redux建立起长连接机制 ，防止在路由切换时候的时候断开连接，需要把socket实例放入公共管理统一处理
-* 此方案暴露出一个触发器  api,方便任何组件调用 , 内部有一个订阅器api ，与 VueX 中 mutations
-*/
-import {getToken} from &quot;./permission&quot;;
-
-let socketUrl = ''
-/**
- * @param value
- * @returns {string}  强数据类型校验
- */
-
-function isType (value) {
-    return Object.prototype.toString.call(value).slice(8, -1)
-}
-
-/**
- * @param event 当前事件
- *  事件轮询器
- */
-function eventPoll (event, outerConditon, time, callback) {
-    let timer
-    let currentCondition
-    timer = clearInterval(() =&gt; {
-        if (currentCondition === outerConditon) {
-            clearInterval(timer)
-            callback &amp;&amp; callback()
-        }
-        currentCondition = event()
-    }, time)
-}
-
-function isSocketContent () {
-    if (process.env.NODE_ENV === 'development') {
-        socketUrl = 'ws://192.168.1.159:8088/ws'
-    }
-    else {
-        socketUrl = 'wss://192.168.12.50:3333'
-    }
-}
-
-/**
- * @constructor 构造函数
- * commit 公共管理触发器
- * action dispatch
- */
-
-function socket (commit, actions,wsAddress) {
-    if (isType(commit) !== 'Function') {
-        throw new Error('commit must be a function')
-    }
-    this.wsAddress=wsAddress //socket地址
-    this.commit = commit
-    this.actions = actions || null
-    this.timer = null
-    this.errorResetNumber = 0 // 错误重连间隔
-    this.closeWs = false
-    this.errorFrom = 0 // socket断开来源
-    this.errorResetTimer = null // 错误重连轮询
-    this.errorDispatchOpen = true // 开启错误调度
-    this.heartSocketOpen = false
-    this.retry=0
-    // isSocketContent()
-    this.$soctket_init();
-
-}
-socket.prototype.$soctket_init = function (callback) {
-    const _this = this
-    if (_this.closeWs) {
-        throw new Error('socket is closed ,$socker_init is fail ,  all methods is invalid')
-    }
-    const token = getToken()
-    // const token=&quot;eyJhbGciOiJIUzI1NiJ9.eyJ3ZWJSb2xlIjoiYWRtaW4iLCJpZCI6IjMiLCJ1c2VybmFtZSI6ImJvc3MwMDIiLCJqdGkiOiIyZWUxM2I1ZWExNzU0NGUyYWZmOWJiNmRkMzc5NGVjYiIsInN1YiI6IlhCU3BvcnRzIiwiaWF0IjoxNjA4MTkwNzAzLCJleHAiOjE2NDA3Nzc5MDN9.UfuslVrqjGMOhdiIGqBhTW45mPOt_xaECGsBM7igvSM&amp;device=d&amp;retry=0&quot;
-    // if (!token) {
-    //     throw new Error('token  is undefined')
-    // }
-    const handerErrorMachine = () =&gt; {
-        if (_this.errorResetNumber === 20) {
-            _this.errorResetNumber = 0
-            _this.errorResetTimer = null
-            _this.errorFrom = 0
-            _this.errorDispatchOpen = false
-            _this.ws = null
-            location.reload()
-            // console.log('socket连接失败')
-            return
-        }
-        _this.errorResetTimer = setTimeout(() =&gt; {
-            _this.$soctket_init()
-            _this.errorResetNumber++
-        }, _this.errorResetNumber * 10000)
-    }
-    /**
-     * 连接错误或者断开乱接
-     * eventment 1 关闭 2连接错误
-     */
-    const errorDispatch = (eventment) =&gt; {
-        let event = eventment
-        return function () {
-            if (_this.errorFrom === 0 &amp;&amp; _this.errorDispatchOpen) {
-                _this.errorFrom = event
-            }
-            event === 1 ? console.log('web socket has failed  from closeState ') : console.log('web socket has failed  from errorState ')
-            if (_this.errorFrom === event &amp;&amp; !_this.closeWs) {
-                _this.errorResetTimer &amp;&amp; clearTimeout(_this.errorResetTimer)
-                handerErrorMachine()
-            }
-        }
-    }
-    if (this.timer) clearTimeout(this.timer)
-    //${this.wsAddress}ws://192.168.1.250:8088/ws
-    _this.ws = new WebSocket(`${this.wsAddress}?token=${token}&amp;device=m&amp;retry=${_this.retry}`);
-    _this.ws.onopen = function () {
-        callback &amp;&amp; callback();
-        _this.retry=1
-        _this.errorResetNumber = 0
-        _this.errorResetTimer = null
-        _this.errorFrom = 0
-        _this.errorDispatchOpen = true
-        _this.$soctket_subscribe()
-        _this.$soctket_heartSoctket()
-        console.log('web socket has connected ')
-    }
-
-    _this.ws.onclose = errorDispatch(1);
-    // _this.ws.onerror = errorDispatch(2)
-}
-
-/**
- * 触发器-&gt;发布信息
- * @param callback 状态处理
- * @param value 数据处理
- */
-socket.prototype.$soctket_emit = function (value, callback) {
-    const _this = this
-    const poll = function () {
-        return _this.ws.readyState
-    }
-    if (callback &amp;&amp; isType(callback) !== 'Function') {
-        throw new Error('$socket_emit arugment[1] must be a function')
-    }
-    if (!_this.ws) {
-        throw new Error('$socket dispatch is fail please use $socket_open method')
-    }
-    if (_this.ws.readyState === 1) { // 连接成功状态
-        _this.ws.send(value)
-        _this.$soctket_heartSoctket()
-        callback &amp;&amp; callback()
-    }
-    else if (_this.ws.readyState === 0) { // 连接中状态 ，轮询查询连接
-        eventPoll(poll, 1, 500, () =&gt; {
-            _this.ws.send(value)
-            _this.$soctket_heartSoctket()
-            callback &amp;&amp; callback()
-        })
-    }
-    else { // 失败重新连接
-        _this.$soctket_init(() =&gt; {
-            _this.$soctket_emit(value, callback)
-        })
-    }
-}
-/**
- * 订阅器-&gt;接受广播
- */
-socket.prototype.$soctket_subscribe = function () {
-    const _this = this
-    _this.ws.onmessage = function (res) {
-        // console.log(res.data);
-        if (_this.actions) {
-            if (isType(_this.actions) !== 'Function') {
-                throw new Error('actions')
-            } else {
-                _this.actions('ACCEPT_MESSAGE',res.data)
-            }
-        } else {
-            _this.commit('ACCEPT_MESSAGE',res.data);
-
-        }
-        // _this.$soctket_heartSoctket();
-    }
-}
-/**
- * 发送心跳
- * 心脏搏动机制-&gt;防止断开连接
- */
-
-socket.prototype.$soctket_heartSoctket = function () {
-    if (this.timer) clearTimeout(this.timer)
-    // console.log(this.timer)
-    this.timer = setTimeout(() =&gt; {
-        if (this.ws.readyState === 1 || this.ws.readyState === 0) {
-            this.ws.send(JSON.stringify({ &quot;action&quot; : &quot;KEEP_ALIVE&quot;}))
-            this.$soctket_heartSoctket()
-        } else {
-            this.$soctket_init()
-        }
-    }, 30000)
-}
-/**
- * 关闭socket连接
- */
-socket.prototype.$soctket_close = function () {
-    console.log(&quot;close&quot;);
-    if (this.timer) clearTimeout(this.timer)
-    if (this.errorResetTimer)clearTimeout(this.errorResetTimer)
-    this.closeWs = true
-    this.retry=0
-    this.ws.close()
-}
-/**
- * 重启socket连接
- */
-socket.prototype.$soctket_open = function () {
-    if (!this.closeWs) {
-        throw new Error('socket is connected')
-    }
-    this.timer = null
-    this.errorResetNumber = 0
-    this.closeWs = false
-    this.errorFrom = 0
-    this.errorResetTimer = null
-    this.errorDispatchOpen = true
-    this.heartSocketOpen = false
-    this.closeWs = false
-    this.$soctket_init()
-}
-export default socket
-
-
-</code></pre>
 ]]></content>
     </entry>
 </feed>
