@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://django-lee-tony.github.io</id>
     <title>django </title>
-    <updated>2021-02-16T08:37:57.707Z</updated>
+    <updated>2021-02-24T06:36:49.338Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://django-lee-tony.github.io"/>
     <link rel="self" href="https://django-lee-tony.github.io/atom.xml"/>
@@ -10,6 +10,129 @@
     <logo>https://django-lee-tony.github.io/images/avatar.png</logo>
     <icon>https://django-lee-tony.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, django </rights>
+    <entry>
+        <title type="html"><![CDATA[ES6之Proxy]]></title>
+        <id>https://django-lee-tony.github.io/post/es6-zhi-proxy/</id>
+        <link href="https://django-lee-tony.github.io/post/es6-zhi-proxy/">
+        </link>
+        <updated>2021-02-24T05:12:20.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="proxy-介绍">Proxy 介绍</h1>
+<p>使用Proxy，你可以将一只猫伪装成一只老虎。下面大约有6个例子，我希望它们能让你相信，Proxy 提供了强大的 Javascript 元编程。<br>
+Proxy用于修改某些操作的默认行为，也可以理解为在目标对象之前架设一层拦截，外部所有的访问都必须先通过这层拦截，因此提供了一种机制，可以对外部的访问进行过滤和修改。这个词的原理为代理，在这里可以表示由它来“代理”某些操作，译为“代理器”。<br>
+ES6原生提供了Proxy构造函数，用来生成Proxy实例。<br>
+<code>var proxy = new Proxy(target, handler);</code><br>
+Proxy对象的所有用法，都是上面的这种形式。不同的只是handle参数的写法。其中new Proxy用来生成Proxy实例，target是表示所要拦截的对象，handle是用来定制拦截行为的对象。<br>
+下面是 Proxy 最简单的例子是，这是一个有陷阱的代理，一个get陷阱，总是返回42。</p>
+<pre><code>let target = {
+    x: 10,
+    y: 20
+};
+​
+let hanler = {
+    get: (obj, prop) =&gt; 42
+};
+​
+target = new Proxy(target, hanler);
+​
+target.x; //42
+target.y; //42
+target.x; // 42
+结果是一个对象将为任何属性访问操作都返回“42”。 这包括target.x，target['x']，Reflect.get(target, 'x')等。
+</code></pre>
+<p>但是，Proxy 陷阱当然不限于属性的读取。 它只是十几个不同陷阱中的一个：</p>
+<pre><code>handler.get
+handler.set
+handler.has
+handler.apply
+handler.construct
+handler.ownKeys
+handler.deleteProperty
+handler.defineProperty
+handler.isExtensible
+handler.preventExtensions
+handler.getPrototypeOf
+handler.setPrototypeOf
+handler.getOwnPropertyDescriptor
+
+</code></pre>
+<h1 id="proxy-用例">Proxy 用例</h1>
+<figure data-type="image" tabindex="1"><img src="https://django-lee-tony.github.io/post-images/1614147719737.jpg" alt="" loading="lazy"></figure>
+<h2 id="默认值零值">默认值/“零值”</h2>
+<p>在 Go 语言中，有零值的概念，零值是特定于类型的隐式默认结构值。其思想是提供类型安全的默认基元值，或者用gopher的话说，给结构一个有用的零值。</p>
+<p>虽然不同的创建模式支持类似的功能，但Javascript无法用隐式初始值包装对象。Javascript中未设置属性的默认值是undefined。但 Proxy 可以改变这种情况。</p>
+<pre><code>const withZeroValue = (target, zeroValue) =&gt;
+    new Proxy(target, {
+        get: (obj, prop) =&gt; (prop in obj ? obj[prop] : zeroValue)
+    });
+    函数withZeroValue 用来包装目标对象。 如果设置了属性，则返回属性值。 否则，它返回一个默认的“零值”。
+    从技术上讲，这种方法也不是隐含的，但如果我们扩展withZeroValue，以Boolean (false), Number (0), String (&quot;&quot;), Object ({})，Array ([])等对应的零值，则可能是隐含的。
+    let pos = {
+    x: 4,
+    y: 19
+};
+console.log(pos.x, pos.y, pos.z); // 4, 19, undefined
+pos = withZeroValue(pos, 0);
+console.log(pos.z, pos.y, pos.z); // 4, 19, 0
+</code></pre>
+<p>此功能可能有用的一个地方是坐标系。 绘图库可以基于数据的形状自动支持2D和3D渲染。 不是创建两个单独的模型，而是始终将z默认为 0 而不是undefined，这可能是有意义的。</p>
+<h2 id="负索引数组">负索引数组</h2>
+<p>在JS中获取数组中的最后一个元素方式通过写的很冗长且重复，也容易出错。 这就是为什么有一个TC39提案定义了一个便利属性Array.lastItem来获取和设置最后一个元素。<br>
+其他语言，如Python和Ruby，使用负组索引更容易访问最后面的元素。例如，可以简单地使用arr[-1]替代arr[arr.length-1]访问最后一个元素。<br>
+使用 Proxy 也可以在 Javascript 中使用负索引。</p>
+<pre><code>const negativeArray = els =&gt;
+    new Proxy(els, {
+        get: (target, propKey, receiver) =&gt;
+            Reflect.get(
+                target,
+                +propKey &lt; 0 ? String(target.length + +propKey) : propKey,
+                receiver
+            )
+    });
+</code></pre>
+<p>一个重要的注意事项是包含handler.get的陷阱字符串化所有属性。 对于数组访问，我们需要将属性名称强制转换为Numbers，这样就可以使用一元加运算符简洁地完成。<br>
+现在[-1]访问最后一个元素，[-2]访问倒数第二个元素，以此类推。</p>
+<pre><code>const unicorn = negativeArray([&quot; &quot;, &quot; &quot;, &quot; &quot;]);
+​
+unicorn[-1]; // ' '
+</code></pre>
+<h2 id="隐藏属性">隐藏属性</h2>
+<p>众所周知 JS 没有私有属性。 Symbol最初是为了启用私有属性而引入的，但后来使用像Object.getOwnPropertySymbols这样的反射方法进行了淡化，这使得它们可以被公开发现。<br>
+长期以来的惯例是将私有属性命名为前下划线_，有效地标记它们“不要访问”。Prox 提供了一种稍微更好的方法来屏蔽这些属性。</p>
+<pre><code>const hide = (target, prefix = &quot;_&quot;) =&gt;
+    new Proxy(target, {
+        has: (obj, prop) =&gt; !prop.startsWith(prefix) &amp;&amp; prop in obj,
+        ownKeys: obj =&gt;
+            Reflect.ownKeys(obj).filter(
+                prop =&gt; typeof prop !== &quot;string&quot; || !prop.startsWith(prefix)
+            ),
+        get: (obj, prop, rec) =&gt; (prop in rec ? obj[prop] : undefined)
+    });
+</code></pre>
+<p>hide函数包装目标对象，并使得从in运算符和Object.getOwnPropertyNames等方法无法访问带有下划线的属性。</p>
+<pre><code>let userData = hide({
+    firstName: &quot;Tom&quot;,
+    mediumHandle: &quot;@tbarrasso&quot;,
+    _favoriteRapper: &quot;Drake&quot;
+});
+​
+userData._favoriteRapper(
+    // undefined
+    &quot;_favoriteRapper&quot; in userData
+); // false
+</code></pre>
+<h2 id="缓存">缓存</h2>
+<p>在客户端和服务器之间同步状态时遇到困难并不罕见。数据可能会随着时间的推移而发生变化，很难确切地知道何时重新同步的逻辑。<br>
+Proxy启用了一种新方法：根据需要将对象包装为无效（和重新同步）属性。 所有访问属性的尝试都首先检查缓存策略，该策略决定返回当前在内存中的内容还是采取其他一些操作。</p>
+<pre><code>const ephemeral = (target, ttl = 60) =&gt; {
+    const CREATED_AT = Date.now();
+    const isExpired = () =&gt; Date.now() - CREATED_AT &gt; ttl * 1000;
+    return new Proxy(target, {
+        get: (obj, prop) =&gt; (isExpired() ? undefined : Reflect.get(obj, prop))
+    });
+};
+</code></pre>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[react-router]]></title>
         <id>https://django-lee-tony.github.io/post/react-router/</id>
@@ -1996,64 +2119,6 @@ socket.prototype.$soctket_open = function () {
 export default socket
 
 
-</code></pre>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[vux多模块应用]]></title>
-        <id>https://django-lee-tony.github.io/post/vux-duo-mo-kuai-ying-yong/</id>
-        <link href="https://django-lee-tony.github.io/post/vux-duo-mo-kuai-ying-yong/">
-        </link>
-        <updated>2021-02-05T09:44:25.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="vuex多模块使用方式">vuex多模块使用方式</h1>
-<h2 id="下载">下载</h2>
-<pre><code class="language-$xslt">npm i vuex 或者 yarn add vuex
-</code></pre>
-<p>##应用<br>
-在vue项目中 src 目录下创建store文件夹<br>
-创建index.js文件 创建modules文件夹 项目中分出的模块放入此文件夹中</p>
-<pre><code class="language-$xslt">import Vue from 'vue';
-import Vuex from 'vuex';
-Vue.use(Vuex);
-/**
- * 配置多模块
- */
-const files = require.context(&quot;./modules&quot;, false, /\.js$/);
-const modules = {};
-files.keys().forEach(key =&gt; {
-  modules[key.replace(/(\.\/|\.js)/g, &quot;&quot;)] = files(key).default;
-});
-Object.keys(modules).forEach((key) =&gt; {
-  modules[key][&quot;namespaced&quot;] = true;
-});
-export default new Vuex.Store({
-  modules
-})
-</code></pre>
-<h3 id="vuex提供的辅助函数">vuex提供的辅助函数</h3>
-<pre><code class="language-$xslt">mapActions 触发action 
-mapMutations 触发mutations
-mapState 获取state中的值
-mapGetters 获取getter 
-</code></pre>
-<h3 id="项目中使用">项目中使用</h3>
-<pre><code class="language-$xslt">//.vue
-    methods中触发
-    ...mapActions(模块名,触发的actions方法)
-    ...mapMutations(模块名,触发的mutations名)
-    computed中触发
-    ...mapState(模块名,获取的value)
-//.js 在vuex模块中
-    actions
-    ['方法名 建议使用常量']({dispatch,commit,rootState}){
-        dispatch(方法名,数据) //触发actions
-        dispatch(模块名/方法名,数据,{root:true}) //触发其他模块的actions
-        commit(方法名,数据) 触发mutations
-        //触发其他模块的mutations同理actions
-        rootState 可以获取其他模块的state value
-    } //
-    commit 
-    ['方法名 建议使用常量'](state,data){} //state value修改
 </code></pre>
 ]]></content>
     </entry>
