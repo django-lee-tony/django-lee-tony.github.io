@@ -8,7 +8,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-<link rel="shortcut icon" href="https://django-lee-tony.github.io/favicon.ico?v=1614150346173">
+<link rel="shortcut icon" href="https://django-lee-tony.github.io/favicon.ico?v=1617003592888">
 <link rel="stylesheet" href="https://django-lee-tony.github.io/styles/main.css">
 
 
@@ -30,7 +30,7 @@ vue2.x对数组对象的深层监听无法实现。因为组件每次渲染都�
   <div class="top-container" data-aos="fade-right">
     <div class="top-header-container">
       <a class="site-title-container" href="https://django-lee-tony.github.io">
-        <img src="https://django-lee-tony.github.io/images/avatar.png?v=1614150346173" class="site-logo">
+        <img src="https://django-lee-tony.github.io/images/avatar.png?v=1617003592888" class="site-logo">
         <h1 class="site-title">django </h1>
       </a>
       <div class="menu-btn" @click="menuVisible = !menuVisible">
@@ -303,6 +303,35 @@ export default defineComponent({
 11. errorCaptured -&gt; onErrorCaptured
 </code></pre>
 <p>除此之外，Vue.js 3.0 还新增了两个用于调试的生命周期 API：onRenderTracked 和 onRenderTriggered。</p>
+<h2 id="添加可在程序内的任何组件实例中访问的全局属性">添加可在程序内的任何组件实例中访问的全局属性。</h2>
+<pre><code>// Vue2.x
+Vue.prototype.$http = () =&gt; {}
+
+// Vue3
+const app = Vue.createApp({})
+app.config.globalProperties.$http = () =&gt; {}
+</code></pre>
+<h2 id="provideinjectvue2x一致">provide/inject【Vue2.x一致】</h2>
+<p>该选项与inject一起使用，允许一个祖先组件作为其所有后代的依赖注入器，无论组件层次结构有多深，只要它们位于同一父链中就可以<br>
+provide 选项应该是一个对象或返回一个对象的函数。该对象包含可注入其子孙的 property。在该对象中你可以使用 ES2015 Symbols 作为 key，但是只在原生支持 Symbol 和 Reflect.ownKeys 的环境下可工作。<br>
+如果在组件中两者都只能在当前活动组件实例的 setup() 中调用，详细请看依赖注入部分</p>
+<pre><code>import { createApp } from 'vue'
+
+const app = createApp({
+  provide: {
+    user: 'John Doe'
+  }
+})
+
+app.component('user-card', {
+  inject: ['user'],
+  template: `
+    &lt;div&gt;
+      {{ user }}
+    &lt;/div&gt;
+  `
+})
+</code></pre>
 
             </div>
             

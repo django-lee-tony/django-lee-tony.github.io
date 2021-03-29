@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://django-lee-tony.github.io</id>
     <title>django </title>
-    <updated>2021-02-24T07:05:50.706Z</updated>
+    <updated>2021-03-29T07:39:58.196Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://django-lee-tony.github.io"/>
     <link rel="self" href="https://django-lee-tony.github.io/atom.xml"/>
@@ -10,6 +10,25 @@
     <logo>https://django-lee-tony.github.io/images/avatar.png</logo>
     <icon>https://django-lee-tony.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, django </rights>
+    <entry>
+        <title type="html"><![CDATA[时区设置及获取]]></title>
+        <id>https://django-lee-tony.github.io/post/shi-qu-she-zhi-ji-huo-qu/</id>
+        <link href="https://django-lee-tony.github.io/post/shi-qu-she-zhi-ji-huo-qu/">
+        </link>
+        <updated>2021-03-29T07:36:52.000Z</updated>
+        <content type="html"><![CDATA[<p>下载moment插件</p>
+<pre><code>yarn add moment yarn add moment-timezone;
+import moment from 'moment-timezone'
+</code></pre>
+<p>//设置时区</p>
+<pre><code>moment.tz.setDefault(&quot;Asia/Shanghai&quot;);
+moment(val).format('YYYY-MM-DD HH:mm:ss')
+</code></pre>
+<p>//查看当前时区</p>
+<pre><code>// console.log(moment.tz.guess())			  
+</code></pre>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[vue3 composition API]]></title>
         <id>https://django-lee-tony.github.io/post/vue3-composition-api/</id>
@@ -223,6 +242,35 @@ export default defineComponent({
 11. errorCaptured -&gt; onErrorCaptured
 </code></pre>
 <p>除此之外，Vue.js 3.0 还新增了两个用于调试的生命周期 API：onRenderTracked 和 onRenderTriggered。</p>
+<h2 id="添加可在程序内的任何组件实例中访问的全局属性">添加可在程序内的任何组件实例中访问的全局属性。</h2>
+<pre><code>// Vue2.x
+Vue.prototype.$http = () =&gt; {}
+
+// Vue3
+const app = Vue.createApp({})
+app.config.globalProperties.$http = () =&gt; {}
+</code></pre>
+<h2 id="provideinjectvue2x一致">provide/inject【Vue2.x一致】</h2>
+<p>该选项与inject一起使用，允许一个祖先组件作为其所有后代的依赖注入器，无论组件层次结构有多深，只要它们位于同一父链中就可以<br>
+provide 选项应该是一个对象或返回一个对象的函数。该对象包含可注入其子孙的 property。在该对象中你可以使用 ES2015 Symbols 作为 key，但是只在原生支持 Symbol 和 Reflect.ownKeys 的环境下可工作。<br>
+如果在组件中两者都只能在当前活动组件实例的 setup() 中调用，详细请看依赖注入部分</p>
+<pre><code>import { createApp } from 'vue'
+
+const app = createApp({
+  provide: {
+    user: 'John Doe'
+  }
+})
+
+app.component('user-card', {
+  inject: ['user'],
+  template: `
+    &lt;div&gt;
+      {{ user }}
+    &lt;/div&gt;
+  `
+})
+</code></pre>
 ]]></content>
     </entry>
     <entry>
@@ -1771,243 +1819,6 @@ export default {
 <h2 id="使用方式">使用方式</h2>
 <pre><code class="language-$xslt"> &lt;svg-icon  icon-class=&quot;svgname&quot; class-name=&quot;svgclass&quot;&gt;&lt;/svg-icon&gt;
 </code></pre>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[vue封装message组件]]></title>
-        <id>https://django-lee-tony.github.io/post/vue-feng-zhuang-message-zu-jian/</id>
-        <link href="https://django-lee-tony.github.io/post/vue-feng-zhuang-message-zu-jian/">
-        </link>
-        <updated>2021-02-05T09:45:08.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="基于-element-源码改造-再封装">基于 element 源码改造 再封装</h1>
-<h2 id="先封装-vue部分">先封装 .vue部分</h2>
-<pre><code class="language-$xslt">&lt;template&gt;
-  &lt;transition name=&quot;el-message-fade&quot; @after-leave=&quot;handleAfterLeave&quot;&gt;
-    &lt;div
-      :class=&quot;[
-        'bwg-message',
-        type &amp;&amp; !iconClass ? `white-${type}` : '',
-        center ? 'is-center' : '',
-        showClose ? 'is-closable' : '',
-        customClass
-      ]&quot;
-      :style=&quot;positionStyle&quot;
-      v-show=&quot;visible&quot;
-      @mouseenter=&quot;clearTimer&quot;
-      @mouseleave=&quot;startTimer&quot;
-      role=&quot;alert&quot;
-    &gt;
-      &lt;div&gt;
-&lt;!--        &lt;i :class=&quot;iconClass&quot; v-if=&quot;iconClass&quot;&gt;&lt;/i&gt;--&gt;
-&lt;!--        &lt;i :class=&quot;typeClass&quot; v-else&gt;&lt;/i&gt;--&gt;
-        &lt;svg-icon :iconClass=&quot;svgName&quot; className=&quot;message-alert&quot;&gt;&lt;/svg-icon&gt;
-      &lt;/div&gt;
-
-      &lt;slot&gt;
-        &lt;p v-if=&quot;!dangerouslyUseHTMLString&quot; class=&quot;el-message__content&quot;&gt;
-          {{ message }}
-        &lt;/p&gt;
-        &lt;p v-else v-html=&quot;message&quot; class=&quot;el-message__content&quot;&gt;&lt;/p&gt;
-      &lt;/slot&gt;
-      &lt;i
-        v-if=&quot;showClose&quot;
-        class=&quot;el-message__closeBtn el-icon-close&quot;
-        @click=&quot;close&quot;
-      &gt;&lt;/i&gt;
-    &lt;/div&gt;
-  &lt;/transition&gt;
-&lt;/template&gt;
-&lt;script type=&quot;text/babel&quot;&gt;
-const typeMap = {
-  success: &quot;success&quot;,
-  info: &quot;info&quot;,
-  warning: &quot;warning&quot;,
-  error: &quot;error&quot;
-};
-export default {
-  data() {
-    return {
-      visible: false,
-      message: &quot;&quot;,
-      duration: 1000,
-      type: &quot;info&quot;,
-      iconClass: &quot;&quot;,
-      customClass: &quot;&quot;,
-      onClose: null,
-      showClose: false,
-      closed: false,
-      verticalOffset: 20,
-      timer: null,
-      dangerouslyUseHTMLString: false,
-      center: false
-    };
-  },
-  computed: {
-    typeClass() {
-      return this.type &amp;&amp; !this.iconClass
-        ? `white--i-success el-icon-${typeMap[this.type]}`
-        : &quot;&quot;;
-    },
-      //返回svg名称
-      svgName(){
-        if(this.type){
-            return this.type
-        }else{
-            return &quot;success&quot;
-        }
-      },
-    positionStyle() {
-      return {
-        top: `${this.verticalOffset}px`
-      };
-    }
-  },
-  watch: {
-    closed(newVal) {
-      if (newVal) {
-        this.visible = false;
-      }
-    }
-  },
-  methods: {
-    handleAfterLeave() {
-      this.$destroy(true);
-      this.$el.parentNode.removeChild(this.$el);
-    },
-    close() {
-      this.closed = true;
-      if (typeof this.onClose === &quot;function&quot;) {
-        this.onClose(this);
-      }
-    },
-    clearTimer() {
-      clearTimeout(this.timer);
-    },
-    startTimer() {
-      if (this.duration &gt; 0) {
-        this.timer = setTimeout(() =&gt; {
-          if (!this.closed) {
-            this.close();
-          }
-        }, this.duration);
-      }
-    },
-    keydown(e) {
-      if (e.keyCode === 27) {
-        // esc关闭消息
-        if (!this.closed) {
-          this.close();
-        }
-      }
-    }
-  },
-  mounted() {
-    this.startTimer();
-    document.addEventListener(&quot;keydown&quot;, this.keydown);
-  },
-  beforeDestroy() {
-    document.removeEventListener(&quot;keydown&quot;, this.keydown);
-  }
-};
-&lt;/script&gt;
-</code></pre>
-<p>##封装.js部分</p>
-<pre><code class="language-$xslt">import Vue from &quot;vue&quot;;
-import Main from &quot;./main.vue&quot;;
-// import { PopupManager } from 'element-ui/src/utils/popup';
-// import { isVNode } from 'element-ui/src/utils/vdom';
-const hasOwnProperty = Object.prototype.hasOwnProperty;
-
-export function noop() {}
-
-export function hasOwn(obj, key) {
-  return hasOwnProperty.call(obj, key);
-}
-function isVNode(node) {
-  return (
-    node !== null &amp;&amp;
-    typeof node === &quot;object&quot; &amp;&amp;
-    hasOwn(node, &quot;componentOptions&quot;)
-  );
-}
-let MessageConstructor = Vue.extend(Main);
-let instance;
-let instances = [];
-let seed = 1;
-const Message = function(options) {
-  if (Vue.prototype.$isServer) return;
-  options = options || {};
-  if (typeof options === &quot;string&quot;) {
-    options = {
-      message: options
-    };
-  }
-  let userOnClose = options.onClose;
-  let id = &quot;message_&quot; + seed++;
-  options.onClose = function() {
-    Message.close(id, userOnClose);
-  };
-  instance = new MessageConstructor({
-    data: options
-  });
-  instance.id = id;
-  if (isVNode(instance.message)) {
-    instance.$slots.default = [instance.message];
-    instance.message = null;
-  }
-  instance.$mount();
-  document.body.appendChild(instance.$el);
-  let verticalOffset = options.offset || 20;
-  instances.forEach(item =&gt; {
-    verticalOffset += item.$el.offsetHeight + 16;
-  });
-  instance.verticalOffset = verticalOffset;
-  instance.visible = true;
-  instance.$el.style.zIndex = 10;
-  instances.push(instance);
-  return instance;
-};
-[&quot;success&quot;, &quot;warning&quot;, &quot;info&quot;, &quot;error&quot;].forEach(type =&gt; {
-  Message[type] = options =&gt; {
-    if (typeof options === &quot;string&quot;) {
-      options = {
-        message: options
-      };
-    }
-    options.type = type;
-    return Message(options);
-  };
-});
-Message.close = function(id, userOnClose) {
-  let len = instances.length;
-  let index = -1;
-  let removedHeight;
-  for (let i = 0; i &lt; len; i++) {
-    if (id === instances[i].id) {
-      removedHeight = instances[i].$el.offsetHeight;
-      index = i;
-      if (typeof userOnClose === &quot;function&quot;) {
-        userOnClose(instances[i]);
-      }
-      instances.splice(i, 1);
-      break;
-    }
-  }
-  if (len &lt;= 1 || index === -1 || index &gt; instances.length - 1) return;
-  for (let i = index; i &lt; len - 1; i++) {
-    let dom = instances[i].$el;
-    dom.style[&quot;top&quot;] =
-      parseInt(dom.style[&quot;top&quot;], 10) - removedHeight - 16 + &quot;px&quot;;
-  }
-};
-Message.closeAll = function() {
-  for (let i = instances.length - 1; i &gt;= 0; i--) {
-    instances[i].close();
-  }
-};
-export default Message;
-</code></pre>
-<p>##最后在需要调用的地方 引入即可  使用方式与element message类似</p>
 ]]></content>
     </entry>
 </feed>

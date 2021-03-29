@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" >
 
-<title>vue项目修改ico | django </title>
+<title>时区设置及获取 | django </title>
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
@@ -18,10 +18,12 @@
 
 
 
-    <meta name="description" content="ico 修改基于vue-cli3
-在开发vue项目的时候 经常会出现ico修改失败 于是网上搜索了一堆的解决方案
+    <meta name="description" content="下载moment插件
+yarn add moment yarn add moment-timezone;
+import moment from 'moment-timezone'
 
-1 , &lt;link rel=&quot;icon&quot; href=&quot;./icon.ico&quot;&..." />
+//设置时区
+moment.tz.setDefault(&..." />
     <meta name="keywords" content="" />
   </head>
   <body>
@@ -93,54 +95,20 @@
       <div class="main-container">
         <div class="content-container" data-aos="fade-up">
           <div class="post-detail">
-            <h2 class="post-title">vue项目修改ico</h2>
-            <div class="post-date">2021-02-05</div>
+            <h2 class="post-title">时区设置及获取</h2>
+            <div class="post-date">2021-03-29</div>
             
             <div class="post-content" v-pre>
-              <h1 id="ico-修改基于vue-cli3">ico 修改基于vue-cli3</h1>
-<h3 id="在开发vue项目的时候-经常会出现ico修改失败-于是网上搜索了一堆的解决方案">在开发vue项目的时候 经常会出现ico修改失败 于是网上搜索了一堆的解决方案</h3>
-<pre><code class="language-$xslt">
-1 , &lt;link rel=&quot;icon&quot; href=&quot;./icon.ico&quot;&gt; //手动更改 开发和生产都无效
-2,通过在 vue.config.js 手动设置pwa 无效
-    pwa:{
-        iconPaths:{
-            ....
-        }
-    }
-3,通过js动态去设置 无效
-    (()=&gt;{
-      var link = document.querySelector(&quot;link[rel*='manifest']&quot;);
-        link.rel=&quot;ico&quot;
-        link.href=&quot;图片路径&quot;
-      document.getElementsByTagName('head')[0].appendChild(main);
-    })() 
-4,手动强制修改 &lt;link rel=&quot;icon&quot;  href=&quot;./img/&lt;%= VUE_APP_NODE %&gt;.ico&quot; type=&quot;image/x-icon&quot; /&gt; 无效
- 最后直接删除public下的img 文件夹  虽然生效 但是页面会报错   崩溃
+              <p>下载moment插件</p>
+<pre><code>yarn add moment yarn add moment-timezone;
+import moment from 'moment-timezone'
 </code></pre>
-<h2 id="生效的解决方案">生效的解决方案</h2>
-<pre><code class="language-$xslt">1,
-    手动删除 public/img文件夹
-//解决页面报错
-        (()=&gt;{
-          var main = document.querySelector(&quot;link[rel*='manifest']&quot;);
-          document.getElementsByTagName('head')[0].removeChild(main);
-        })();
-    //然后再手动设置
-    &lt;link rel=&quot;icon&quot;  href=&quot;./img/&lt;%= VUE_APP_NODE %&gt;.ico&quot; type=&quot;image/x-icon&quot; /&gt;
-此时刷新页面 生效并且无报错
-2,通过再vue.config.js中设置 动态加入到 htmlWebpackPlugin中
- chainWebpack: config =&gt; {
-        config.plugin('html').tap((options) =&gt; {
-            options[0].title= process.env.VUE_APP_TITLE//设置项目名称
-            // options[0].favicon='public/img/rora.ico' //设置ico
-            // options[0].BASE_URL= &quot;./favicon/&quot; //设置relicon
-            // options[0].BASE_URL_VARIABLE= process.env.VUE_APP_VARIABLE //设置relicon
-            return options
-        })
-    }
-    然后可以直接在index.html中使用 
-    &lt;link rel=&quot;icon&quot;  href=&quot;&lt;%=  htmlWebpackPlugin.options.favicon %&gt;&quot; type=&quot;image/x-icon&quot; /&gt;
-    此方法生效 
+<p>//设置时区</p>
+<pre><code>moment.tz.setDefault(&quot;Asia/Shanghai&quot;);
+moment(val).format('YYYY-MM-DD HH:mm:ss')
+</code></pre>
+<p>//查看当前时区</p>
+<pre><code>// console.log(moment.tz.guess())			  
 </code></pre>
 
             </div>
@@ -148,9 +116,9 @@
             
               <div class="next-post">
                 <div class="next">下一篇</div>
-                <a href="https://django-lee-tony.github.io/post/yi-dong-duan-chang-jian-wen-ti-chu-li/">
+                <a href="https://django-lee-tony.github.io/post/vue3-composition-api/">
                   <h3 class="post-title">
-                    移动端常见问题处理
+                    vue3 composition API
                   </h3>
                 </a>
               </div>
